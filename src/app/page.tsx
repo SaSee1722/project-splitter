@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   ArrowRight, 
@@ -12,152 +14,284 @@ import {
   FolderTree, 
   ShieldCheck, 
   Cpu, 
-  Compass, 
+  FileCode2, 
   ChevronRight,
-  Code2
+  Code2,
+  Boxes,
+  Zap,
+  Check
 } from 'lucide-react';
+import Logo from '@/components/Logo';
+
+interface DemoPreview {
+  id: string;
+  name: string;
+  tag: string;
+  tech: string;
+  problem: string;
+  screens: { name: string; owner: string; file: string; priority: string }[];
+  members: { name: string; role: string; share: number; color: string }[];
+  branches: string[];
+}
+
+const DEMOS: DemoPreview[] = [
+  {
+    id: 'logistics',
+    name: 'OmniTrack - Fleet Telematics',
+    tag: 'Logistics & IoT',
+    tech: 'React',
+    problem: 'Truck dispatchers suffer from blind spots in vehicle maintenance, live GPS route tracking, and driver fatigue alerts.',
+    screens: [
+      { name: 'Fleet Overview Map', owner: 'Salabadesh', file: 'src/screens/FleetOverviewMapScreen.tsx', priority: 'Must Have' },
+      { name: 'Vehicle Telemetry Detail', owner: 'Arun', file: 'src/screens/VehicleTelemetryDetailScreen.tsx', priority: 'Must Have' },
+      { name: 'Maintenance Schedule', owner: 'Karthik', file: 'src/screens/MaintenanceScheduleScreen.tsx', priority: 'Should Have' },
+      { name: 'Alerts & Incidents Hub', owner: 'Vijay', file: 'src/screens/AlertsIncidentsHubScreen.tsx', priority: 'Must Have' },
+    ],
+    members: [
+      { name: 'Salabadesh', role: 'Frontend Lead', share: 25, color: 'from-amber-400 to-orange-500' },
+      { name: 'Arun', role: 'Full Stack', share: 25, color: 'from-indigo-400 to-violet-500' },
+      { name: 'Karthik', role: 'UI/UX Dev', share: 25, color: 'from-cyan-400 to-sky-500' },
+      { name: 'Vijay', role: 'Backend/API', share: 25, color: 'from-emerald-400 to-teal-500' },
+    ],
+    branches: ['feature/salabadesh-fleet-map', 'feature/arun-telemetry-detail', 'feature/karthik-maintenance-calendar', 'feature/vijay-alerts-hub'],
+  },
+  {
+    id: 'telehealth',
+    name: 'CarePulse - Remote Vitals',
+    tag: 'Healthcare Mobile',
+    tech: 'React Native',
+    problem: 'Homebound patients struggle to track blood pressure, remember prescriptions, and conduct video calls with their cardiologists.',
+    screens: [
+      { name: 'Patient Vitals Dashboard', owner: 'Sarah', file: 'src/screens/PatientVitalsScreen.tsx', priority: 'Must Have' },
+      { name: 'Prescription Calendar', owner: 'Alex', file: 'src/screens/PrescriptionCalendarScreen.tsx', priority: 'Must Have' },
+      { name: 'Doctor Video Call Room', owner: 'Devon', file: 'src/screens/VideoConsultationScreen.tsx', priority: 'Should Have' },
+    ],
+    members: [
+      { name: 'Sarah', role: 'Product & Clinical', share: 34, color: 'from-rose-400 to-pink-500' },
+      { name: 'Alex', role: 'Mobile Engineer', share: 33, color: 'from-indigo-400 to-cyan-500' },
+      { name: 'Devon', role: 'Backend & Video', share: 33, color: 'from-emerald-400 to-teal-500' },
+    ],
+    branches: ['feature/sarah-vitals-dash', 'feature/alex-prescriptions', 'feature/devon-webrtc-call'],
+  },
+  {
+    id: 'ecommerce',
+    name: 'ArtisanBazaar - Maker Shop',
+    tag: 'E-Commerce Platform',
+    tech: 'Next.js',
+    problem: 'Independent craft makers need an omnichannel web store with automated inventory synchronization across pop-up retail stalls and Stripe web checkout.',
+    screens: [
+      { name: 'Storefront Catalog', owner: 'Maya', file: 'src/app/catalog/page.tsx', priority: 'Must Have' },
+      { name: 'Stripe Express Checkout', owner: 'Salabadesh', file: 'src/app/checkout/page.tsx', priority: 'Must Have' },
+      { name: 'Inventory Sync Admin', owner: 'Leo', file: 'src/app/admin/inventory/page.tsx', priority: 'Should Have' },
+    ],
+    members: [
+      { name: 'Maya', role: 'Design Lead', share: 33, color: 'from-fuchsia-400 to-purple-500' },
+      { name: 'Salabadesh', role: 'Full Stack', share: 34, color: 'from-amber-400 to-orange-500' },
+      { name: 'Leo', role: 'Backend Engineer', share: 33, color: 'from-emerald-400 to-cyan-500' },
+    ],
+    branches: ['feature/maya-catalog-ui', 'feature/salabadesh-stripe-checkout', 'feature/leo-inventory-api'],
+  },
+];
 
 export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 selection:bg-indigo-500 selection:text-white">
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-24 md:pt-32 md:pb-36 overflow-hidden border-b border-zinc-800/80">
-        {/* Subtle grid background */}
-        <div 
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #ffffff 1px, transparent 0)`,
-            backgroundSize: '24px 24px',
-          }}
-        />
+  const [activeDemo, setActiveDemo] = useState<DemoPreview>(DEMOS[0]);
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          {/* Badge */}
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium text-zinc-300 mb-8 animate-fade-in shadow-sm">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
-            <span className="text-zinc-400">Powered by</span>
-            <span className="text-indigo-400 font-semibold">Google Gemini API</span>
-            <span className="text-zinc-600">|</span>
-            <span className="text-zinc-400">Architectural Task Planner</span>
+  return (
+    <div className="min-h-screen bg-[#07090E] text-zinc-100 selection:bg-amber-500/30 selection:text-amber-200 overflow-x-hidden">
+      {/* Ambient background glow points */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-indigo-600/15 via-amber-500/10 to-transparent blur-[140px] opacity-70" />
+        <div className="absolute top-[600px] -left-40 w-[500px] h-[500px] bg-cyan-600/10 blur-[130px] rounded-full opacity-50" />
+        <div className="absolute top-[800px] -right-40 w-[500px] h-[500px] bg-amber-600/10 blur-[130px] rounded-full opacity-40" />
+      </div>
+
+      {/* Hero Section */}
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 z-10 border-b border-zinc-800/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Top Announcement Badge */}
+          <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800/90 text-xs font-medium text-zinc-300 mb-8 backdrop-blur-md shadow-lg shadow-black/40">
+            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-zinc-400">TeamForge AI Engine</span>
+            <span className="text-zinc-700">|</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-indigo-300 to-cyan-300 font-semibold">
+              Powered by Google Gemini 2.5 Flash
+            </span>
           </div>
 
-          {/* Heading */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-zinc-100 max-w-4xl mx-auto leading-[1.1] mb-6">
+          {/* Main Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.08] mb-6">
             Turn Ideas Into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-cyan-400 to-sky-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 via-indigo-400 to-cyan-400">
               Team-Ready Projects.
             </span>
           </h1>
 
-          {/* Subtitle / Explanation */}
-          <p className="text-base sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Describe your problem. Let AI structure your project, identify screens, and divide the work across your team.
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+            Describe your problem. Let AI structure your project, identify screens, and divide the work across your team with exact file assignments.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          {/* Primary CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-14">
             <Link
               href="/create"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-xl shadow-indigo-600/25 transition-all transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
             >
-              <span>Create Project</span>
+              <Sparkles className="w-4 h-4 text-cyan-200" />
+              <span>Create Project Plan</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
             <Link
               href="/projects"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 font-medium text-sm transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800/80 text-zinc-200 font-semibold text-sm transition-all"
             >
-              <span>Explore Sample Blueprints</span>
+              <span>Explore Saved Blueprints</span>
               <ChevronRight className="w-4 h-4 text-zinc-500" />
             </Link>
           </div>
 
-          {/* Interactive Blueprint Mockup Terminal */}
-          <div className="max-w-4xl mx-auto bg-zinc-900/90 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden text-left">
-            <div className="bg-zinc-950 px-4 py-3 border-b border-zinc-800 flex items-center justify-between">
+          {/* Real-time Interactive Blueprint Demo Studio */}
+          <div className="max-w-5xl mx-auto text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 px-2">
               <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                <span className="text-xs font-mono text-zinc-400 ml-2">teamforge-blueprint-preview.json</span>
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5 text-amber-400" />
+                  Live Architecture Preview
+                </span>
+                <span className="text-[11px] text-zinc-500 hidden sm:inline">— Click to switch project domains:</span>
               </div>
-              <span className="text-[11px] font-mono text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
-                Gemini 1.5 Architecture Model
-              </span>
+
+              {/* Demo Switcher Pills */}
+              <div className="flex items-center space-x-1.5 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800">
+                {DEMOS.map((demo) => (
+                  <button
+                    key={demo.id}
+                    onClick={() => setActiveDemo(demo)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                      activeDemo.id === demo.id
+                        ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm'
+                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
+                    }`}
+                  >
+                    {demo.tag}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6 bg-zinc-950/40">
-              <div className="space-y-3 md:col-span-2">
+            {/* Terminal Window */}
+            <div className="bg-[#0B0F19] rounded-2xl border border-zinc-800/90 shadow-2xl shadow-black/80 overflow-hidden">
+              {/* Window Header */}
+              <div className="bg-[#0e1320] px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="text-xs font-mono text-cyan-400 uppercase tracking-wider">Problem Statement</span>
+                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                  <span className="text-xs font-mono text-zinc-400 ml-2 font-medium">
+                    {activeDemo.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.blueprint
+                  </span>
                 </div>
-                <p className="text-xs text-zinc-300 leading-relaxed bg-zinc-900/80 p-3.5 rounded-xl border border-zinc-800 font-mono">
-                  &quot;Logistics dispatchers suffer from blind spots in vehicle maintenance, GPS tracking, and fatigue alerts...&quot;
-                </p>
-
-                <div className="grid grid-cols-2 gap-2 pt-2">
-                  <div className="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80">
-                    <span className="text-[10px] uppercase font-mono text-zinc-500 block mb-1">Assigned Screen</span>
-                    <span className="text-xs font-bold text-zinc-200">Fleet Overview Map</span>
-                    <span className="text-[11px] text-indigo-400 block mt-0.5">Owner: Salabadesh</span>
-                  </div>
-                  <div className="bg-zinc-900/60 p-3 rounded-xl border border-zinc-800/80">
-                    <span className="text-[10px] uppercase font-mono text-zinc-500 block mb-1">Assigned Screen</span>
-                    <span className="text-xs font-bold text-zinc-200">Vehicle Telemetry</span>
-                    <span className="text-[11px] text-indigo-400 block mt-0.5">Owner: Arun</span>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                    {activeDemo.tech}
+                  </span>
+                  <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    Balanced 100%
+                  </span>
                 </div>
               </div>
 
-              <div className="bg-zinc-900/90 p-4 rounded-xl border border-zinc-800 flex flex-col justify-between">
-                <div>
-                  <span className="text-[10px] uppercase font-mono text-zinc-500 block mb-2">Workload Allocation</span>
-                  <div className="space-y-2 text-xs">
-                    <div>
-                      <div className="flex justify-between text-[11px] mb-1">
-                        <span className="text-zinc-300">Salabadesh</span>
-                        <span className="font-mono text-indigo-400">25%</span>
-                      </div>
-                      <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
-                        <div className="bg-indigo-500 h-full w-1/4" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-[11px] mb-1">
-                        <span className="text-zinc-300">Arun</span>
-                        <span className="font-mono text-indigo-400">25%</span>
-                      </div>
-                      <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
-                        <div className="bg-indigo-500 h-full w-1/4" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-[11px] mb-1">
-                        <span className="text-zinc-300">Karthik</span>
-                        <span className="font-mono text-indigo-400">25%</span>
-                      </div>
-                      <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
-                        <div className="bg-indigo-500 h-full w-1/4" />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-[11px] mb-1">
-                        <span className="text-zinc-300">Vijay</span>
-                        <span className="font-mono text-indigo-400">25%</span>
-                      </div>
-                      <div className="w-full bg-zinc-800 h-1 rounded-full overflow-hidden">
-                        <div className="bg-indigo-500 h-full w-1/4" />
-                      </div>
+              {/* Window Body */}
+              <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-gradient-to-b from-transparent to-black/30">
+                {/* Left 7 cols: Problem & Screen Architecture */}
+                <div className="lg:col-span-7 space-y-4">
+                  {/* Problem statement callout */}
+                  <div className="bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-800/80">
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500 block mb-1">
+                      Problem Statement
+                    </span>
+                    <p className="text-xs text-zinc-300 leading-relaxed font-mono">
+                      &quot;{activeDemo.problem}&quot;
+                    </p>
+                  </div>
+
+                  {/* Screens with assigned files */}
+                  <div>
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-cyan-400 block mb-2">
+                      Screen Architecture & Exact Assigned Files
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      {activeDemo.screens.map((screen, idx) => (
+                        <div
+                          key={idx}
+                          className="bg-zinc-900/80 p-3 rounded-xl border border-zinc-800/90 hover:border-zinc-700 transition-all flex flex-col justify-between"
+                        >
+                          <div>
+                            <div className="flex items-center justify-between gap-1 mb-1">
+                              <span className="text-xs font-bold text-zinc-100">{screen.name}</span>
+                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400">
+                                {screen.priority}
+                              </span>
+                            </div>
+                            <div className="text-[11px] font-mono text-cyan-400/90 truncate mb-1">
+                              {screen.file}
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between pt-2 border-t border-zinc-900 text-[11px]">
+                            <span className="text-zinc-500">Owner:</span>
+                            <span className="font-semibold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                              {screen.owner}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-zinc-800 flex items-center justify-between text-[11px]">
-                  <span className="text-emerald-400 flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> 0 Overlaps
-                  </span>
-                  <span className="text-zinc-500 font-mono">4 Branches</span>
+                {/* Right 5 cols: Team Workload & GitHub Branches */}
+                <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
+                  {/* Team Members Workload */}
+                  <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/80">
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block mb-3">
+                      Team Workload Division
+                    </span>
+                    <div className="space-y-2.5">
+                      {activeDemo.members.map((member, mIdx) => (
+                        <div key={mIdx}>
+                          <div className="flex items-center justify-between text-xs mb-1">
+                            <span className="font-semibold text-zinc-200">{member.name}</span>
+                            <div className="flex items-center space-x-1.5 font-mono text-[11px]">
+                              <span className="text-zinc-400">{member.role}</span>
+                              <span className="font-bold text-indigo-400">{member.share}%</span>
+                            </div>
+                          </div>
+                          <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+                            <div
+                              className={`h-full rounded-full bg-gradient-to-r ${member.color}`}
+                              style={{ width: `${member.share}%` }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* GitHub Branch Plan */}
+                  <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/80">
+                    <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-400 block mb-2">
+                      GitHub Feature Branches
+                    </span>
+                    <div className="space-y-1.5 font-mono text-[11px]">
+                      {activeDemo.branches.map((b, bIdx) => (
+                        <div key={bIdx} className="flex items-center space-x-2 text-zinc-300 bg-zinc-900/60 px-2.5 py-1 rounded-lg border border-zinc-800/60 truncate">
+                          <GitBranch className="w-3 h-3 text-cyan-400 flex-shrink-0" />
+                          <span className="truncate">{b}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -166,58 +300,58 @@ export default function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 border-b border-zinc-800/80 bg-zinc-900/30">
+      <section className="py-20 border-b border-zinc-800/60 relative z-10 bg-[#090C14]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400">
-              Workflow
+            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-amber-400">
+              The Engineering Pipeline
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-2">
-              From Idea to Team Sprint in 4 Steps
+            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">
+              From Raw Idea to Team Sprint in 4 Steps
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-              Eliminate architectural ambiguity and unblock every engineer on day one.
+              No more guessing who works on what. Clear screen ownership, exact file mapping, and git branches on day one.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl relative">
-              <span className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
+            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
+              <span className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
                 01
               </span>
               <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Enter Problem Statement</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Describe your software idea, user requirements, and select your preferred technology stack.
+                Describe your software concept in plain English and select your tech stack (React, Next.js, Flutter, etc.).
               </p>
             </div>
 
-            <div className="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl relative">
-              <span className="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
+            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
+              <span className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
                 02
               </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Define Team & Screens</h3>
+              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Add Team & Screens</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Add your team members and their roles. Optionally provide screen names or let Gemini auto-deduce them.
+                List your developers and their roles. Optionally add screens or let Gemini deduce the full screen architecture.
               </p>
             </div>
 
-            <div className="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl relative">
-              <span className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
+            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
+              <span className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
                 03
               </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Analyze with Gemini</h3>
+              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Gemini AI Analysis</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Gemini identifies features, assigns screens, balances workload, and catches missing screens.
+                Gemini balances workload, catches missing screens, and maps exact file paths to every developer.
               </p>
             </div>
 
-            <div className="bg-zinc-900/80 border border-zinc-800 p-6 rounded-2xl relative">
-              <span className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
+            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
+              <span className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
                 04
               </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Download Starter Structure</h3>
+              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Export & Code</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Export markdown blueprints, copy GitHub branch plans, and download framework-ready ZIP skeletons.
+                Download starter ZIP with empty screen placeholders, copy GitHub plans, and start coding immediately.
               </p>
             </div>
           </div>
@@ -225,68 +359,68 @@ export default function LandingPage() {
       </section>
 
       {/* Key Features Grid */}
-      <section className="py-20 border-b border-zinc-800/80">
+      <section className="py-20 border-b border-zinc-800/60 relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400">
-              Capabilities
+              Built for Modern Engineering
             </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mt-2">
-              Engineered for Real Development Teams
+            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">
+              Everything Your Team Needs to Launch
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-              A serious developer productivity tool that outputs actionable blueprints instead of conversational fluff.
+              Actionable software architecture without the fluff.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mb-4">
-                <Sparkles className="w-5 h-5" />
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <FileCode2 className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Gemini AI Intelligence Layer</h3>
+              <h3 className="font-bold text-base text-zinc-100 mb-2">Exact File Allocation</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Direct integration with Google Gemini API producing strict, validated JSON schemas with zero free-form hallucination.
+                Every team member sees the exact files they need to work on from the project structure with 1-click copy.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mb-4">
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                 <Users className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-base text-zinc-100 mb-2">Equitable Workload Balancer</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Strict 1-to-1 screen assignment ensuring zero duplicate ownership while balancing screen complexity and developer roles.
+                Strict 1-to-1 screen ownership ensuring 0 duplicate ownership while balancing screen complexity and developer roles.
               </p>
             </div>
 
             {/* Feature 3 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-4">
-                <Layers className="w-5 h-5" />
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <Sparkles className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">AI Missing Screen Detection</h3>
+              <h3 className="font-bold text-base text-zinc-100 mb-2">Missing Screen Detector</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                When you provide planned screens, Gemini identifies omitted architectural screens and categorizes them in an AI Suggested section.
+                When you bring your own screens, Gemini identifies omitted screens (Auth, Settings, Errors) and tags them in an AI Suggested section.
               </p>
             </div>
 
             {/* Feature 4 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-4">
-                <FolderTree className="w-5 h-5" />
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <Download className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Downloadable Project ZIP</h3>
+              <h3 className="font-bold text-base text-zinc-100 mb-2">Downloadable Starter ZIP</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                Generates empty starter screen placeholders with developer metadata and TODO lists. Zero generated business logic.
+                Generates empty starter screen placeholders with developer metadata and TODO checklists. Zero generated code bloat.
               </p>
             </div>
 
             {/* Feature 5 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mb-4">
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                 <GitBranch className="w-5 h-5" />
               </div>
               <h3 className="font-bold text-base text-zinc-100 mb-2">GitHub Collaboration Strategy</h3>
@@ -296,13 +430,13 @@ export default function LandingPage() {
             </div>
 
             {/* Feature 6 */}
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-4">
+            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
+              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Secure Secret Management</h3>
+              <h3 className="font-bold text-base text-zinc-100 mb-2">Plain English & Strict Privacy</h3>
               <p className="text-xs text-zinc-400 leading-relaxed">
-                API keys are kept strictly server-side in environment variables or user browser storage. Never leaked to code repositories.
+                Clean, understandable human instructions. Your API keys are kept strictly server-side and never exposed to git.
               </p>
             </div>
           </div>
@@ -310,10 +444,12 @@ export default function LandingPage() {
       </section>
 
       {/* Final CTA Banner */}
-      <section className="py-20">
+      <section className="py-20 relative z-10">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-br from-indigo-950/60 to-zinc-900 border border-indigo-500/30 rounded-3xl p-10 sm:p-14 shadow-2xl relative overflow-hidden">
-            <h2 className="text-2xl sm:text-4xl font-extrabold text-zinc-100 tracking-tight mb-4">
+          <div className="bg-gradient-to-br from-[#0e1424] via-[#090d16] to-[#05070c] border border-indigo-500/30 rounded-3xl p-10 sm:p-14 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
               Ready to structure your next engineering sprint?
             </h2>
             <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8">
@@ -321,8 +457,9 @@ export default function LandingPage() {
             </p>
             <Link
               href="/create"
-              className="inline-flex items-center space-x-2.5 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5"
+              className="inline-flex items-center space-x-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5"
             >
+              <Sparkles className="w-4 h-4 text-cyan-200" />
               <span>Create Project</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
@@ -331,10 +468,10 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800/80 py-8 text-center text-xs text-zinc-500">
+      <footer className="border-t border-zinc-800/80 py-8 text-xs text-zinc-500 bg-[#06080E] relative z-10">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-zinc-300">TeamForge AI</span>
+          <div className="flex items-center space-x-3">
+            <Logo size="sm" />
             <span>—</span>
             <span>Turn Ideas Into Team-Ready Projects</span>
           </div>

@@ -16,11 +16,21 @@ import {
   Sparkles, 
   Cpu,
   Check,
-  X
+  X,
+  Code2,
+  ArrowRight
 } from 'lucide-react';
 import { getAllProjects, renameProject, deleteProject } from '@/services/projectStorage';
 import { SavedProject } from '@/types/project';
 import { useToast } from '@/components/Toast';
+
+const avatarGradients = [
+  'from-amber-400 to-orange-500',
+  'from-indigo-400 to-purple-500',
+  'from-cyan-400 to-blue-500',
+  'from-emerald-400 to-teal-500',
+  'from-rose-400 to-pink-500',
+];
 
 export default function ProjectsHistoryPage() {
   const router = useRouter();
@@ -74,68 +84,80 @@ export default function ProjectsHistoryPage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-950 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#07090E] text-zinc-100 py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Ambient background glows */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[128px] pointer-events-none" />
+      <div className="absolute top-1/2 right-10 w-80 h-80 bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-6xl mx-auto space-y-8 relative z-10">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-zinc-800">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-zinc-800/80">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 tracking-tight flex items-center gap-2.5">
-              <FolderGit2 className="w-7 h-7 text-cyan-400" />
-              <span>Project History</span>
-            </h1>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-              Review, manage, rename, and export previously generated project blueprints.
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shadow-inner">
+                <FolderGit2 className="w-5 h-5 text-indigo-300" />
+              </div>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                  Saved Blueprints
+                </h1>
+              </div>
+            </div>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl">
+              Access your previously generated architectural plans, screen specifications, and file assignments.
             </p>
           </div>
 
           <Link
             href="/create"
-            className="self-start sm:self-auto inline-flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/25 transition-all"
+            className="self-start sm:self-auto inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-indigo-600 to-cyan-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/25 hover:from-amber-400 hover:to-cyan-400 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
           >
             <PlusCircle className="w-4 h-4" />
-            <span>Create New Project</span>
+            <span>Create New Plan</span>
           </Link>
         </div>
 
-        {/* Search bar */}
-        <div className="flex items-center justify-between gap-4">
+        {/* Search bar & project counter */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-zinc-500 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by project name, tech, or developer..."
-              className="w-full pl-10 pr-4 py-2 bg-zinc-900 border border-zinc-800 rounded-xl text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+              className="w-full pl-11 pr-4 py-2.5 bg-[#0B0F19] border border-zinc-800/90 rounded-2xl text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-indigo-500/70 shadow-inner"
             />
           </div>
-          <span className="text-xs text-zinc-500">
-            {filteredProjects.length} {filteredProjects.length === 1 ? 'Project' : 'Projects'}
+          <span className="text-xs font-mono font-medium text-zinc-400 bg-[#0B0F19] px-3.5 py-1.5 rounded-xl border border-zinc-800/80 self-start sm:self-auto">
+            {filteredProjects.length} {filteredProjects.length === 1 ? 'Project Saved' : 'Projects Saved'}
           </span>
         </div>
 
         {/* Project List */}
         {filteredProjects.length === 0 ? (
-          <div className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-12 text-center">
-            <div className="w-12 h-12 rounded-full bg-zinc-800 text-zinc-400 flex items-center justify-center mx-auto mb-4">
-              <FolderGit2 className="w-6 h-6" />
+          <div className="bg-[#0B0F19] border border-zinc-800/90 rounded-3xl p-12 text-center shadow-xl">
+            <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/5">
+              <FolderGit2 className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-zinc-200 mb-1">No Projects Found</h3>
-            <p className="text-xs text-zinc-400 max-w-sm mx-auto mb-6">
+            <h3 className="text-lg font-bold text-white mb-1">
+              {searchTerm ? 'No Matching Projects' : 'No Saved Projects Yet'}
+            </h3>
+            <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mx-auto mb-6 leading-relaxed">
               {searchTerm
-                ? 'No projects match your current search query. Try searching for a different keyword.'
-                : 'You have not created any projects yet. Start by defining your first project idea.'}
+                ? 'Try searching with different keywords or clear the search filter.'
+                : 'Turn your first problem statement or project idea into an actionable team architecture.'}
             </p>
             <Link
               href="/create"
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-indigo-600 to-cyan-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/25 hover:from-amber-400 hover:to-cyan-400 transition-all"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Create First Project</span>
+              <span>Generate First Blueprint</span>
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredProjects.map((project) => {
               const totalScreens =
                 project.blueprint.screens.length +
@@ -152,52 +174,53 @@ export default function ProjectsHistoryPage() {
               return (
                 <div
                   key={project.id}
-                  className="bg-zinc-900 border border-zinc-800/90 rounded-2xl p-5 hover:border-zinc-700/80 transition-all flex flex-col justify-between group shadow-sm"
+                  className="bg-[#0B0F19] border border-zinc-800/90 hover:border-zinc-700 rounded-3xl p-6 transition-all flex flex-col justify-between group shadow-xl hover:shadow-indigo-950/20"
                 >
                   <div>
-                    {/* Header: Tech badge & Intelligence badge */}
-                    <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="px-2.5 py-1 rounded-md text-[11px] font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                    {/* Top row: Tech Badge & Source Beacon */}
+                    <div className="flex items-center justify-between gap-2 mb-3.5">
+                      <span className="px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
+                        <Code2 className="w-3 h-3 text-indigo-400" />
                         {project.input.technology}
                       </span>
                       {project.source === 'gemini' ? (
-                        <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 font-mono flex items-center gap-1">
-                          <Sparkles className="w-3 h-3" />
-                          Gemini
+                        <span className="text-[10px] text-emerald-300 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/30 font-mono font-semibold flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-emerald-400" />
+                          Gemini 2.5
                         </span>
                       ) : (
-                        <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 font-mono flex items-center gap-1">
-                          <Cpu className="w-3 h-3" />
+                        <span className="text-[10px] text-amber-300 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30 font-mono font-semibold flex items-center gap-1">
+                          <Cpu className="w-3 h-3 text-amber-400" />
                           Architect
                         </span>
                       )}
                     </div>
 
-                    {/* Title or Rename input */}
+                    {/* Title or Rename Input */}
                     {isRenaming ? (
                       <div className="flex items-center space-x-1.5 mb-2">
                         <input
                           type="text"
                           value={newName}
                           onChange={(e) => setNewName(e.target.value)}
-                          className="flex-1 px-2.5 py-1 text-xs bg-zinc-950 border border-indigo-500 rounded-lg text-zinc-100 focus:outline-none"
+                          className="flex-1 px-3 py-1.5 text-xs bg-zinc-950 border border-indigo-500 rounded-xl text-white focus:outline-none"
                           autoFocus
                         />
                         <button
                           onClick={() => handleSaveRename(project.id)}
-                          className="p-1 text-emerald-400 hover:text-emerald-300"
+                          className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
                         >
                           <Check className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setRenamingId(null)}
-                          className="p-1 text-zinc-400 hover:text-zinc-200"
+                          className="p-1.5 rounded-lg bg-zinc-800 text-zinc-400 hover:text-white"
                         >
                           <X className="w-4 h-4" />
                         </button>
                       </div>
                     ) : (
-                      <h3 className="font-bold text-base text-zinc-100 group-hover:text-indigo-300 transition-colors mb-2 line-clamp-1">
+                      <h3 className="font-bold text-base sm:text-lg text-white group-hover:text-indigo-300 transition-colors mb-2 line-clamp-1">
                         {project.input.projectName}
                       </h3>
                     )}
@@ -208,41 +231,59 @@ export default function ProjectsHistoryPage() {
                     </p>
 
                     {/* Stats pills */}
-                    <div className="grid grid-cols-2 gap-2 text-xs text-zinc-400 mb-4 bg-zinc-950/50 p-2.5 rounded-xl border border-zinc-800/80">
-                      <div className="flex items-center space-x-1.5">
+                    <div className="grid grid-cols-2 gap-2 text-xs text-zinc-300 mb-4 bg-[#070A12] p-3 rounded-2xl border border-zinc-800/80">
+                      <div className="flex items-center space-x-2">
                         <Users className="w-3.5 h-3.5 text-cyan-400" />
-                        <span>{project.input.teamMembers.length} Members</span>
+                        <span className="font-semibold text-white">{project.input.teamMembers.length}</span>
+                        <span className="text-zinc-500 text-[11px]">Devs</span>
                       </div>
-                      <div className="flex items-center space-x-1.5">
+                      <div className="flex items-center space-x-2">
                         <Layers className="w-3.5 h-3.5 text-amber-400" />
-                        <span>{totalScreens} Screens</span>
+                        <span className="font-semibold text-white">{totalScreens}</span>
+                        <span className="text-zinc-500 text-[11px]">Screens</span>
                       </div>
                     </div>
 
-                    {/* Team Members List */}
-                    <div className="flex flex-wrap gap-1 mb-4">
-                      {project.input.teamMembers.map((m, mIdx) => (
-                        <span
-                          key={mIdx}
-                          className="text-[10px] px-2 py-0.5 rounded bg-zinc-800/90 text-zinc-300"
-                        >
-                          {m.name}
-                        </span>
-                      ))}
+                    {/* Team Members Avatar Stack */}
+                    <div className="flex items-center space-x-1 mb-4 overflow-hidden">
+                      {project.input.teamMembers.map((m, mIdx) => {
+                        const gradient = avatarGradients[mIdx % avatarGradients.length];
+                        const initials = m.name
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .toUpperCase()
+                          .slice(0, 2);
+
+                        return (
+                          <div
+                            key={mIdx}
+                            className={`w-6 h-6 rounded-full bg-gradient-to-tr ${gradient} p-[1px] shadow-sm flex-shrink-0`}
+                            title={m.name}
+                          >
+                            <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center text-[9px] font-bold text-white">
+                              {initials}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      <span className="text-[11px] text-zinc-500 pl-1.5 font-medium">
+                        {project.input.teamMembers.map((m) => m.name).join(', ')}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Footer actions */}
-                  <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs">
-                    <span className="text-[11px] text-zinc-500 flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
+                  {/* Card Footer Actions */}
+                  <div className="pt-3.5 border-t border-zinc-800/80 flex items-center justify-between text-xs">
+                    <span className="text-[11px] font-mono text-zinc-500 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-zinc-600" />
                       {formattedDate}
                     </span>
 
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-1.5">
                       <button
                         onClick={() => startRename(project.id, project.input.projectName)}
-                        className="p-1.5 text-zinc-400 hover:text-zinc-200 rounded-lg hover:bg-zinc-800 transition-colors"
+                        className="p-1.5 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
                         title="Rename Project"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -256,10 +297,10 @@ export default function ProjectsHistoryPage() {
                       </button>
                       <Link
                         href={`/blueprint/${project.id}`}
-                        className="flex items-center space-x-1 px-3 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-semibold text-xs transition-colors"
+                        className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-indigo-500/15 to-cyan-500/15 text-white border border-indigo-500/30 hover:border-indigo-400/60 font-semibold text-xs transition-all shadow-sm"
                       >
                         <span>Open</span>
-                        <ExternalLink className="w-3 h-3" />
+                        <ArrowRight className="w-3 h-3 text-cyan-400" />
                       </Link>
                     </div>
                   </div>

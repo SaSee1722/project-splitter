@@ -10,36 +10,47 @@ interface ScreenArchitectureSectionProps {
 
 export default function ScreenArchitectureSection({ screens }: ScreenArchitectureSectionProps) {
   return (
-    <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-md">
-      <div className="flex items-center space-x-2.5 mb-6">
-        <div className="p-2 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
-          <Monitor className="w-5 h-5" />
+    <section className="bg-[#0B0F19] border border-zinc-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      {/* Subtle atmospheric glow */}
+      <div className="absolute top-0 right-0 w-72 h-44 bg-sky-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header */}
+      <div className="flex items-center space-x-3 mb-6 relative z-10">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-500/20 to-indigo-500/10 border border-sky-500/30 text-sky-400 flex items-center justify-center shadow-inner">
+          <Monitor className="w-5 h-5 text-sky-400" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-zinc-100 tracking-tight">Screen Architecture & File Locations</h2>
-          <p className="text-xs text-zinc-400">Every screen mapped to an exact file path and assigned developer</p>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">Screen Architecture & File Locations</h2>
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-sky-500/10 text-sky-300 border border-sky-500/20">
+              {screens.length} Screens
+            </span>
+          </div>
+          <p className="text-xs text-zinc-400">Every planned screen mapped to its exact starter file and responsible developer</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 relative z-10">
         {screens.map((screen, idx) => {
           const priorityStyle =
             screen.priority.toLowerCase().includes('must')
-              ? 'text-rose-400 bg-rose-500/10 border-rose-500/20'
+              ? 'text-rose-300 bg-rose-500/10 border-rose-500/30'
               : screen.priority.toLowerCase().includes('should')
-              ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
-              : 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20';
+              ? 'text-amber-300 bg-amber-500/10 border-amber-500/30'
+              : 'text-indigo-300 bg-indigo-500/10 border-indigo-500/30';
 
           return (
             <div
               key={idx}
-              className="bg-zinc-950/70 border border-zinc-800/80 rounded-xl p-5 hover:border-zinc-700/80 transition-all flex flex-col justify-between"
+              className="bg-[#070A12] border border-zinc-800/80 hover:border-sky-500/30 rounded-2xl p-5 sm:p-6 transition-all flex flex-col justify-between group shadow-sm"
             >
               <div>
                 {/* Header: Name & Priority */}
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-semibold text-sm text-zinc-100">{screen.name}</h3>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border uppercase tracking-wider ${priorityStyle}`}>
+                <div className="flex items-start justify-between gap-2 mb-3">
+                  <h3 className="font-bold text-sm sm:text-base text-zinc-100 group-hover:text-sky-300 transition-colors">
+                    {screen.name}
+                  </h3>
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold border uppercase tracking-wider ${priorityStyle}`}>
                     {screen.priority}
                   </span>
                 </div>
@@ -47,27 +58,27 @@ export default function ScreenArchitectureSection({ screens }: ScreenArchitectur
                 {/* Developer assignment pill */}
                 <div className="flex items-center space-x-2 text-xs mb-3">
                   <span className="text-zinc-500 font-medium">Assigned:</span>
-                  <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/25 font-medium text-[11px]">
-                    <User className="w-3 h-3 text-indigo-400" />
+                  <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 font-semibold text-xs">
+                    <User className="w-3.5 h-3.5 text-indigo-400" />
                     <span>{screen.assignedMember}</span>
                   </span>
                 </div>
 
                 {/* Assigned File path */}
                 {screen.assignedFile && (
-                  <div className="flex items-center space-x-1.5 p-2 rounded-lg bg-zinc-900 border border-zinc-800/80 text-[11px] font-mono text-cyan-300 mb-3 truncate">
+                  <div className="flex items-center space-x-2 p-2.5 rounded-xl bg-zinc-950 border border-zinc-800/90 text-xs font-mono text-cyan-300 mb-3 truncate">
                     <FileCode className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
                     <span className="truncate">{screen.assignedFile}</span>
                   </div>
                 )}
 
                 {/* Purpose in Plain English */}
-                <p className="text-xs text-zinc-400 leading-relaxed mb-4">{screen.purpose}</p>
+                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed mb-4">{screen.purpose}</p>
 
                 {/* Responsibilities list */}
                 {screen.responsibilities && screen.responsibilities.length > 0 && (
-                  <div className="pt-3 border-t border-zinc-900">
-                    <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2">
+                  <div className="pt-3 border-t border-zinc-850">
+                    <span className="text-[10px] font-mono font-semibold text-zinc-500 uppercase tracking-wider block mb-2">
                       Tasks to Complete
                     </span>
                     <ul className="space-y-1.5 text-xs text-zinc-300">

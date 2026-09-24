@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import { ToastProvider } from '@/components/Toast';
 
 export const metadata: Metadata = {
@@ -16,10 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+      <body className="bg-[#07090E] text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
         <ToastProvider>
           <Navbar />
-          <div className="flex-1">{children}</div>
+          <div className="flex-1 flex flex-col">{children}</div>
+          <Footer />
         </ToastProvider>
       </body>
     </html>

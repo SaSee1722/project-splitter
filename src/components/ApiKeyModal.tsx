@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, Key, CheckCircle, AlertCircle, Sparkles, ExternalLink, ShieldCheck } from 'lucide-react';
+import { X, Key, CheckCircle, AlertCircle, Sparkles, ExternalLink, ShieldCheck, Terminal, Cpu } from 'lucide-react';
 import { getCustomApiKey, setCustomApiKey } from '@/services/projectStorage';
 import { useToast } from './Toast';
 
@@ -100,45 +100,48 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyUpdated }: ApiKeyMod
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl p-6 text-zinc-100">
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-800">
-          <div className="flex items-center space-x-2">
-            <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">
-              <Key className="w-5 h-5" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-lg bg-[#0B0F19] border border-zinc-800/90 rounded-3xl shadow-2xl p-6 sm:p-7 text-zinc-100 overflow-hidden">
+        {/* Ambient glow accent */}
+        <div className="absolute top-0 right-0 w-64 h-32 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80 relative z-10">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shadow-inner">
+              <Key className="w-5 h-5 text-indigo-300" />
             </div>
             <div>
-              <h3 className="font-semibold text-base text-zinc-100">Gemini API Intelligence Settings</h3>
+              <h3 className="font-bold text-base sm:text-lg text-white tracking-tight">Gemini AI Intelligence Settings</h3>
               <p className="text-xs text-zinc-400">Configure your Google Gemini API access</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 text-zinc-400 hover:text-zinc-200 rounded-lg hover:bg-zinc-800 transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-white rounded-xl hover:bg-zinc-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="py-4 space-y-4">
-          <div className="flex items-center justify-between p-3 rounded-lg bg-zinc-950/70 border border-zinc-800/80 text-xs">
+        <div className="py-4 space-y-4 relative z-10">
+          <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#070A12] border border-zinc-800/80 text-xs">
             <div className="flex items-center space-x-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Server Environment Status:</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <span className="text-zinc-300 font-medium">Server Environment:</span>
             </div>
             {hasEnvKey ? (
-              <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono text-[11px] border border-emerald-500/20">
-                GEMINI_API_KEY Configured in .env
+              <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-300 font-mono text-[11px] font-semibold border border-emerald-500/30">
+                GEMINI_API_KEY Active (.env)
               </span>
             ) : (
-              <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 font-mono text-[11px] border border-amber-500/20">
-                No .env key (Offline Engine or Custom Key)
+              <span className="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-300 font-mono text-[11px] font-semibold border border-amber-500/30">
+                Using Local Engine or Custom Key
               </span>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-300 mb-2">
               Custom Gemini API Key (Optional)
             </label>
             <input
@@ -146,24 +149,24 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyUpdated }: ApiKeyMod
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
               placeholder="AIzaSy..."
-              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-sm font-mono text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+              className="w-full px-4 py-2.5 bg-[#070A12] border border-zinc-800/90 rounded-2xl text-xs font-mono text-white placeholder-zinc-600 focus:outline-none focus:border-indigo-500/80 shadow-inner transition-all"
             />
-            <p className="mt-1.5 text-xs text-zinc-500 flex items-center justify-between">
-              <span>Saved locally in browser memory. Never shared or committed.</span>
+            <div className="mt-2 flex items-center justify-between text-xs text-zinc-500">
+              <span>Saved locally in browser memory only.</span>
               <a
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noreferrer"
-                className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 font-sans"
+                className="text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1 font-medium font-sans"
               >
                 Get Gemini Key <ExternalLink className="w-3 h-3" />
               </a>
-            </p>
+            </div>
           </div>
 
           {testResult && (
             <div
-              className={`p-3 rounded-lg border text-xs flex items-start space-x-2 ${
+              className={`p-3.5 rounded-2xl border text-xs flex items-start space-x-2.5 ${
                 testResult.success
                   ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
                   : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
@@ -174,28 +177,28 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyUpdated }: ApiKeyMod
               ) : (
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-rose-400" />
               )}
-              <span>{testResult.message}</span>
+              <span className="leading-relaxed">{testResult.message}</span>
             </div>
           )}
 
-          <div className="bg-zinc-950/50 p-3 rounded-lg border border-zinc-800/60 text-xs text-zinc-400 space-y-1">
-            <p className="font-medium text-zinc-300 flex items-center gap-1.5">
+          <div className="bg-[#070A12] p-3.5 rounded-2xl border border-zinc-800/80 text-xs text-zinc-400 space-y-1">
+            <p className="font-semibold text-zinc-200 flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
               Offline Fallback Engine
             </p>
-            <p>
-              If no API key is specified, TeamForge AI uses its built-in deterministic Senior Architect Engine so you can evaluate the full workflow smoothly.
+            <p className="text-[11px] leading-relaxed text-zinc-400">
+              If an external Gemini call ever times out, TeamForge AI seamlessly falls back to its deterministic local engine so your team is never blocked.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+        <div className="flex items-center justify-between pt-4 border-t border-zinc-800/80 relative z-10">
           <div className="flex space-x-2">
             <button
               type="button"
               onClick={handleTestConnection}
               disabled={testing}
-              className="px-3 py-1.5 text-xs font-medium bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg transition-colors disabled:opacity-50"
+              className="px-3.5 py-2 text-xs font-semibold bg-[#070A12] hover:bg-zinc-800 border border-zinc-800 text-zinc-300 rounded-xl transition-colors disabled:opacity-50"
             >
               {testing ? 'Testing...' : 'Test Connection'}
             </button>
@@ -203,9 +206,9 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyUpdated }: ApiKeyMod
               <button
                 type="button"
                 onClick={handleClear}
-                className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="px-3.5 py-2 text-xs font-medium text-zinc-400 hover:text-white transition-colors"
               >
-                Clear Key
+                Clear
               </button>
             )}
           </div>
@@ -213,14 +216,14 @@ export default function ApiKeyModal({ isOpen, onClose, onKeyUpdated }: ApiKeyMod
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1.5 text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-zinc-400 hover:text-white rounded-xl transition-colors"
             >
               Cancel
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="px-4 py-1.5 text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg shadow-sm transition-colors"
+              className="px-5 py-2 text-xs font-bold bg-gradient-to-r from-amber-500 via-indigo-600 to-cyan-500 hover:from-amber-400 hover:to-cyan-400 text-white rounded-xl shadow-lg shadow-indigo-600/20 transition-all"
             >
               Save Configuration
             </button>

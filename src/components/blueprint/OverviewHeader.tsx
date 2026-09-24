@@ -13,7 +13,9 @@ import {
   Sparkles, 
   Cpu, 
   Check, 
-  Archive
+  Archive,
+  ArrowDownToLine,
+  Share2
 } from 'lucide-react';
 import { ProjectBlueprint, ProjectInput } from '@/types/project';
 import { 
@@ -43,7 +45,7 @@ export default function OverviewHeader({ input, blueprint, source = 'gemini' }: 
   const handleDownloadZip = async () => {
     try {
       setDownloadingZip(true);
-      showToast('Generating project structure ZIP...', 'info');
+      showToast('Packing framework starter files into ZIP...', 'info');
       const blob = await generateProjectZip(input, blueprint);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -82,7 +84,7 @@ export default function OverviewHeader({ input, blueprint, source = 'gemini' }: 
     const text = copyTeamAssignmentsToClipboard(blueprint);
     await navigator.clipboard.writeText(text);
     setCopiedTeam(true);
-    showToast('Team assignments copied to clipboard!', 'success');
+    showToast('Team file assignments copied to clipboard!', 'success');
     setTimeout(() => setCopiedTeam(false), 2000);
   };
 
@@ -95,53 +97,60 @@ export default function OverviewHeader({ input, blueprint, source = 'gemini' }: 
   };
 
   return (
-    <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+    <div className="bg-[#0B0F19] border border-zinc-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      {/* Top subtle glow background */}
+      <div className="absolute top-0 right-0 w-96 h-48 bg-gradient-to-b from-indigo-500/10 via-amber-500/5 to-transparent blur-3xl pointer-events-none" />
+
       {/* Top row: Title and Badges */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-zinc-800/80">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 pb-6 border-b border-zinc-800/80 relative z-10">
         <div>
-          <div className="flex flex-wrap items-center gap-2 mb-2">
-            <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          <div className="flex flex-wrap items-center gap-2 mb-2.5">
+            <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 flex items-center gap-1.5">
+              <Code2 className="w-3.5 h-3.5 text-indigo-400" />
               {input.technology}
             </span>
-            <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-800 text-zinc-300 border border-zinc-700/60">
-              {input.teamMembers.length} Engineers
+            <span className="px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-300 border border-zinc-800 flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-cyan-400" />
+              {input.teamMembers.length} Developers
             </span>
             {source === 'gemini' ? (
-              <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                Gemini AI Intelligence Layer
+              <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+                Gemini 2.5 Flash Verified
               </span>
             ) : (
-              <span className="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1.5">
-                <Cpu className="w-3.5 h-3.5" />
-                Senior Architect Engine (Local AI)
+              <span className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+                <Cpu className="w-3.5 h-3.5 text-amber-400" />
+                Local Architect Engine
               </span>
             )}
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-100 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight">
             {input.projectName}
           </h1>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-1">
-            Complete architectural blueprint, screen allocation & team collaboration matrix
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
+            Architectural blueprint with exact file mapping and balanced workload distribution.
           </p>
         </div>
 
-        {/* Action Buttons */}
+        {/* Action Controls */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {/* Download ZIP */}
           <button
             onClick={handleDownloadZip}
             disabled={downloadingZip}
-            className="flex items-center space-x-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-50"
+            className="flex items-center space-x-2 px-5 py-3 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 via-indigo-600 to-cyan-500 hover:from-amber-400 hover:to-cyan-400 text-white shadow-xl shadow-indigo-600/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50"
           >
             <Archive className="w-4 h-4" />
-            <span>{downloadingZip ? 'Packing ZIP...' : 'Download Project Structure'}</span>
+            <span>{downloadingZip ? 'Packing Starter ZIP...' : 'Download Project ZIP'}</span>
           </button>
 
-          <div className="flex items-center space-x-1.5 bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+          {/* Export JSON / MD */}
+          <div className="flex items-center space-x-1 bg-[#080B12] p-1 rounded-xl border border-zinc-800">
             <button
               onClick={handleExportJson}
               title="Export as JSON"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors"
             >
               <FileCode2 className="w-3.5 h-3.5 text-amber-400" />
               <span>JSON</span>
@@ -149,18 +158,19 @@ export default function OverviewHeader({ input, blueprint, source = 'gemini' }: 
             <button
               onClick={handleExportMarkdown}
               title="Export as Markdown"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors"
             >
               <FileText className="w-3.5 h-3.5 text-sky-400" />
               <span>Markdown</span>
             </button>
           </div>
 
-          <div className="flex items-center space-x-1.5 bg-zinc-950 p-1 rounded-xl border border-zinc-800">
+          {/* Copy Team & Git */}
+          <div className="flex items-center space-x-1 bg-[#080B12] p-1 rounded-xl border border-zinc-800">
             <button
               onClick={handleCopyTeam}
-              title="Copy Team Assignments"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+              title="Copy Team Assignments & Files"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors"
             >
               {copiedTeam ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Users className="w-3.5 h-3.5 text-indigo-400" />}
               <span>{copiedTeam ? 'Copied' : 'Copy Team'}</span>
@@ -168,54 +178,54 @@ export default function OverviewHeader({ input, blueprint, source = 'gemini' }: 
             <button
               onClick={handleCopyGit}
               title="Copy GitHub Collaboration Plan"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-zinc-100 hover:bg-zinc-800 transition-colors"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-900 transition-colors"
             >
               {copiedGit ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <GitBranch className="w-3.5 h-3.5 text-cyan-400" />}
-              <span>{copiedGit ? 'Copied' : 'Copy Git Plan'}</span>
+              <span>{copiedGit ? 'Copied' : 'Copy Git'}</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6">
-        <div className="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 relative z-10">
+        <div className="bg-[#080B12] p-4 rounded-2xl border border-zinc-800/80">
           <div className="flex items-center space-x-2 text-zinc-400 text-xs mb-1">
             <Code2 className="w-4 h-4 text-indigo-400" />
-            <span>Framework</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider">Tech Stack</span>
           </div>
-          <p className="text-base sm:text-lg font-bold text-zinc-100">{input.technology}</p>
+          <p className="text-base sm:text-lg font-black text-white">{input.technology}</p>
         </div>
 
-        <div className="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+        <div className="bg-[#080B12] p-4 rounded-2xl border border-zinc-800/80">
           <div className="flex items-center space-x-2 text-zinc-400 text-xs mb-1">
             <Users className="w-4 h-4 text-cyan-400" />
-            <span>Developers</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider">Engineers</span>
           </div>
-          <p className="text-base sm:text-lg font-bold text-zinc-100">{input.teamMembers.length} Members</p>
+          <p className="text-base sm:text-lg font-black text-white">{input.teamMembers.length} Members</p>
         </div>
 
-        <div className="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+        <div className="bg-[#080B12] p-4 rounded-2xl border border-zinc-800/80">
           <div className="flex items-center space-x-2 text-zinc-400 text-xs mb-1">
             <Layers className="w-4 h-4 text-amber-400" />
-            <span>Total Screens</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider">Total Screens</span>
           </div>
-          <p className="text-base sm:text-lg font-bold text-zinc-100">
+          <p className="text-base sm:text-lg font-black text-white">
             {totalScreens}
             {blueprint.aiSuggestedScreens && blueprint.aiSuggestedScreens.length > 0 && (
-              <span className="text-xs font-normal text-indigo-400 ml-1.5">
-                ({blueprint.aiSuggestedScreens.length} suggested)
+              <span className="text-xs font-normal text-amber-400 ml-1.5 font-mono">
+                (+{blueprint.aiSuggestedScreens.length} suggested)
               </span>
             )}
           </p>
         </div>
 
-        <div className="bg-zinc-950/70 p-4 rounded-xl border border-zinc-800/80">
+        <div className="bg-[#080B12] p-4 rounded-2xl border border-zinc-800/80">
           <div className="flex items-center space-x-2 text-zinc-400 text-xs mb-1">
             <Sparkles className="w-4 h-4 text-emerald-400" />
-            <span>Core Features</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider">Core Features</span>
           </div>
-          <p className="text-base sm:text-lg font-bold text-zinc-100">{blueprint.coreFeatures.length} Modules</p>
+          <p className="text-base sm:text-lg font-black text-white">{blueprint.coreFeatures.length} Modules</p>
         </div>
       </div>
     </div>

@@ -27,7 +27,7 @@ export default function ProjectStructureSection({ structure, projectName }: Proj
   const filteredStructure = selectedMember === 'ALL'
     ? structure
     : structure.filter((n) => {
-        if (n.type === 'dir') return true; // keep directory markers or filter based on children
+        if (n.type === 'dir') return true;
         return n.assignedMember?.toLowerCase() === selectedMember.toLowerCase();
       });
 
@@ -45,58 +45,70 @@ export default function ProjectStructureSection({ structure, projectName }: Proj
   };
 
   return (
-    <section className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 sm:p-8 shadow-md">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <div className="flex items-center space-x-2.5">
-          <div className="p-2 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
-            <FolderTree className="w-5 h-5" />
+    <section className="bg-[#0B0F19] border border-zinc-800/90 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+      {/* Subtle atmospheric glow */}
+      <div className="absolute top-0 right-0 w-80 h-48 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 relative z-10">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-cyan-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center shadow-inner">
+            <FolderTree className="w-5 h-5 text-indigo-300" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-zinc-100 tracking-tight">Project File Structure & Developer Ownership</h2>
+            <div className="flex items-center space-x-2">
+              <h2 className="text-lg sm:text-xl font-bold text-white tracking-tight">Project File Structure & Developer Ownership</h2>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
+                Direct File Mapping
+              </span>
+            </div>
             <p className="text-xs text-zinc-400">See the exact files your team needs to create, with developer owners tagged on each file</p>
           </div>
         </div>
 
         <button
           onClick={handleCopy}
-          className="self-start sm:self-auto flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-950 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 transition-colors"
+          className="self-start sm:self-auto flex items-center space-x-2 px-4 py-2 rounded-xl text-xs font-semibold bg-[#070A12] hover:bg-zinc-850 border border-zinc-800 text-zinc-300 hover:text-white transition-all shadow-sm"
         >
-          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-zinc-400" />}
+          {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4 text-zinc-400" />}
           <span>{copied ? 'Tree Copied' : 'Copy File Tree'}</span>
         </button>
       </div>
 
       {/* Filter by Team Member */}
       {membersWithFiles.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5 mb-5 p-2 rounded-xl bg-zinc-950/60 border border-zinc-800/80">
-          <span className="text-[11px] text-zinc-400 font-medium px-2 flex items-center gap-1">
-            <Filter className="w-3 h-3 text-cyan-400" />
-            Show files for:
+        <div className="flex flex-wrap items-center gap-2 mb-5 p-2 rounded-2xl bg-[#070A12] border border-zinc-800/80 relative z-10">
+          <span className="text-[11px] font-mono text-zinc-400 font-semibold px-2 flex items-center gap-1.5">
+            <Filter className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Show files for:</span>
           </span>
           <button
             onClick={() => setSelectedMember('ALL')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
               selectedMember === 'ALL'
-                ? 'bg-indigo-600 text-white'
-                : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
+                ? 'bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-white border border-indigo-500/40 shadow-sm'
+                : 'bg-zinc-950 text-zinc-400 hover:text-white border border-zinc-850'
             }`}
           >
             All Files ({structure.filter((n) => n.type === 'file').length})
           </button>
           {membersWithFiles.map((m) => {
             const count = structure.filter((n) => n.type === 'file' && n.assignedMember === m).length;
+            const isSelected = selectedMember === m;
             return (
               <button
                 key={m}
                 onClick={() => setSelectedMember(m)}
-                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 ${
-                  selectedMember === m
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 ${
+                  isSelected
+                    ? 'bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-cyan-500/20 text-white border border-indigo-500/40 shadow-sm'
+                    : 'bg-zinc-950 text-zinc-400 hover:text-white border border-zinc-850'
                 }`}
               >
                 <span>{m}</span>
-                <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-zinc-800 text-zinc-300">{count}</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-full bg-zinc-800/80 text-zinc-300">
+                  {count}
+                </span>
               </button>
             );
           })}
@@ -104,20 +116,20 @@ export default function ProjectStructureSection({ structure, projectName }: Proj
       )}
 
       {/* Terminal Tree View */}
-      <div className="bg-zinc-950 rounded-xl border border-zinc-800/80 overflow-hidden font-mono text-xs">
-        <div className="bg-zinc-900/90 px-4 py-2.5 border-b border-zinc-800/80 flex items-center justify-between">
+      <div className="bg-[#070A12] rounded-2xl border border-zinc-800/90 overflow-hidden font-mono text-xs shadow-inner relative z-10">
+        <div className="bg-[#05080E] px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80 inline-block" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80 inline-block" />
-            <span className="text-zinc-400 text-[11px] ml-2">{projectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}/</span>
+            <span className="text-zinc-400 text-xs ml-2 font-mono">{projectName.toLowerCase().replace(/[^a-z0-9]/g, '-')}/</span>
           </div>
-          <span className="text-[10px] text-zinc-400 font-sans">
+          <span className="text-[11px] font-sans text-zinc-400">
             {selectedMember === 'ALL' ? 'Showing complete project files' : `Showing assigned files for ${selectedMember}`}
           </span>
         </div>
 
-        <div className="p-4 space-y-1.5 max-h-96 overflow-y-auto">
+        <div className="p-4 space-y-1 max-h-96 overflow-y-auto">
           {filteredStructure.map((node, idx) => {
             const isDir = node.type === 'dir' || node.path.endsWith('/');
             const depth = (node.path.match(/\//g) || []).length;
@@ -128,23 +140,23 @@ export default function ProjectStructureSection({ structure, projectName }: Proj
             return (
               <div
                 key={idx}
-                className={`flex items-center justify-between px-2.5 py-1.5 rounded transition-colors group ${
+                className={`flex items-center justify-between px-3 py-1.5 rounded-xl transition-colors group ${
                   isOwner ? 'bg-indigo-500/15 border border-indigo-500/30' : 'hover:bg-zinc-900/60'
                 }`}
-                style={{ paddingLeft: `${indent * 16 + 10}px` }}
+                style={{ paddingLeft: `${indent * 16 + 12}px` }}
               >
-                <div className="flex items-center space-x-2 text-zinc-300 min-w-0">
+                <div className="flex items-center space-x-2.5 text-zinc-300 min-w-0">
                   {isDir ? (
-                    <Folder className="w-3.5 h-3.5 text-indigo-400 flex-shrink-0" />
+                    <Folder className="w-4 h-4 text-amber-400 flex-shrink-0" />
                   ) : (
-                    <File className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+                    <File className="w-4 h-4 text-cyan-400 flex-shrink-0" />
                   )}
-                  <span className={`truncate ${isDir ? 'text-indigo-300 font-medium' : isOwner ? 'text-white font-bold' : 'text-zinc-200'}`}>
+                  <span className={`truncate ${isDir ? 'text-zinc-200 font-bold' : isOwner ? 'text-white font-bold' : 'text-zinc-300'}`}>
                     {node.path}
                   </span>
                 </div>
 
-                <div className="flex items-center space-x-2 flex-shrink-0 ml-3">
+                <div className="flex items-center space-x-2.5 flex-shrink-0 ml-3">
                   {/* File purpose description */}
                   {node.description && (
                     <span className="text-[11px] text-zinc-500 group-hover:text-zinc-400 font-sans hidden md:block max-w-xs truncate">
@@ -155,7 +167,7 @@ export default function ProjectStructureSection({ structure, projectName }: Proj
                   {/* Assigned member tag */}
                   {node.assignedMember && (
                     <span
-                      className={`text-[10px] font-sans px-2 py-0.5 rounded-full font-medium ${
+                      className={`text-[10px] font-sans px-2.5 py-0.5 rounded-full font-semibold ${
                         node.assignedMember === 'Shared / All'
                           ? 'bg-zinc-800 text-zinc-400 border border-zinc-700/60'
                           : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
