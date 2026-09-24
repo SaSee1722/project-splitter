@@ -492,12 +492,12 @@ function generateReadmeContent(input: ProjectInput, blueprint: ProjectBlueprint)
 ---
 
 ## Team Workload Distribution
-| Team Member | Role | Assigned Screens | Workload Share |
-|---|---|---|---|
+| Team Member | Role | Assigned Screens | Files To Work On | Workload |
+|---|---|---|---|---|
 ${blueprint.teamAssignments
   .map(
     (t) =>
-      `| **${t.member}** | ${t.role} | ${t.assignedScreens.join(', ')} | ${t.workloadPercentage || Math.round(100 / blueprint.teamAssignments.length)}% |`
+      `| **${t.member}** | ${t.role} | ${t.assignedScreens.join(', ')} | ${(t.assignedFiles || []).map((f) => `\`${f}\``).join('<br>')} | ${t.workloadPercentage || Math.round(100 / blueprint.teamAssignments.length)}% |`
   )
   .join('\n')}
 
@@ -512,7 +512,7 @@ ${blueprint.coreFeatures.map((f, i) => `${i + 1}. **${f.title}** (${f.complexity
 ${blueprint.screens
   .map(
     (s, i) =>
-      `### ${i + 1}. ${s.name} [${s.priority}]\n- **Owner:** ${s.assignedMember}\n- **Purpose:** ${s.purpose}\n- **Key Responsibilities:**\n${s.responsibilities.map((r) => `  - ${r}`).join('\n')}`
+      `### ${i + 1}. ${s.name} [${s.priority}]\n- **Owner:** ${s.assignedMember}\n- **File Location:** \`${s.assignedFile || 'src/screens/' + s.name + 'Screen.tsx'}\`\n- **Purpose:** ${s.purpose}\n- **Tasks to Complete:**\n${s.responsibilities.map((r) => `  - ${r}`).join('\n')}`
   )
   .join('\n\n')}
 
@@ -522,7 +522,7 @@ ${
       blueprint.aiSuggestedScreens
         .map(
           (s, i) =>
-            `#### ${i + 1}. ${s.name} [${s.priority}]\n- **Owner:** ${s.assignedMember}\n- **Purpose:** ${s.purpose}\n- **Responsibilities:**\n${s.responsibilities.map((r) => `  - ${r}`).join('\n')}`
+            `#### ${i + 1}. ${s.name} [${s.priority}]\n- **Owner:** ${s.assignedMember}\n- **File Location:** \`${s.assignedFile || 'src/screens/' + s.name + 'Screen.tsx'}\`\n- **Purpose:** ${s.purpose}\n- **Tasks:**\n${s.responsibilities.map((r) => `  - ${r}`).join('\n')}`
         )
         .join('\n\n')
     : ''
@@ -533,13 +533,13 @@ ${
 ## Getting Started
 1. Clone this repository.
 2. Checkout your assigned feature branch (see \`GIT_WORKFLOW.md\`).
-3. Locate your placeholder screen in \`src/screens/\` (or framework directory).
-4. Review the TODO checklist at the top of your screen file.
+3. Locate your assigned files in the file tree (see \`TEAM_ASSIGNMENTS.md\`).
+4. Review the TODO checklist at the top of your screen file and start building!
 `;
 }
 
 function generateTeamAssignmentsContent(input: ProjectInput, blueprint: ProjectBlueprint): string {
-  return `# Team Workload & Responsibility Matrix: ${input.projectName}
+  return `# Team Workload & Assigned Files: ${input.projectName}
 
 ${blueprint.teamAssignments
   .map(
@@ -549,7 +549,10 @@ ${blueprint.teamAssignments
 ### Assigned Screens:
 ${m.assignedScreens.map((s) => `- ${s}`).join('\n')}
 
-### Core Responsibilities:
+### Files You Need to Work On (from Project Structure):
+${(m.assignedFiles || []).map((f) => `- \`${f}\``).join('\n')}
+
+### What You Need To Do:
 ${m.responsibilities.map((r) => `- ${r}`).join('\n')}
 
 ---

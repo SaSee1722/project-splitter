@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Monitor, User, CheckCircle2, ShieldCheck, Flame } from 'lucide-react';
+import { Monitor, User, CheckCircle2, FileCode } from 'lucide-react';
 import { ScreenItem } from '@/types/project';
 
 interface ScreenArchitectureSectionProps {
@@ -16,8 +16,8 @@ export default function ScreenArchitectureSection({ screens }: ScreenArchitectur
           <Monitor className="w-5 h-5" />
         </div>
         <div>
-          <h2 className="text-lg font-bold text-zinc-100 tracking-tight">Screen Architecture & Ownership</h2>
-          <p className="text-xs text-zinc-400">Strict one-to-one developer allocation with clear functional scope</p>
+          <h2 className="text-lg font-bold text-zinc-100 tracking-tight">Screen Architecture & File Locations</h2>
+          <p className="text-xs text-zinc-400">Every screen mapped to an exact file path and assigned developer</p>
         </div>
       </div>
 
@@ -53,20 +53,28 @@ export default function ScreenArchitectureSection({ screens }: ScreenArchitectur
                   </span>
                 </div>
 
-                {/* Purpose */}
+                {/* Assigned File path */}
+                {screen.assignedFile && (
+                  <div className="flex items-center space-x-1.5 p-2 rounded-lg bg-zinc-900 border border-zinc-800/80 text-[11px] font-mono text-cyan-300 mb-3 truncate">
+                    <FileCode className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
+                    <span className="truncate">{screen.assignedFile}</span>
+                  </div>
+                )}
+
+                {/* Purpose in Plain English */}
                 <p className="text-xs text-zinc-400 leading-relaxed mb-4">{screen.purpose}</p>
 
                 {/* Responsibilities list */}
                 {screen.responsibilities && screen.responsibilities.length > 0 && (
                   <div className="pt-3 border-t border-zinc-900">
                     <span className="text-[10px] font-semibold text-zinc-500 uppercase tracking-wider block mb-2">
-                      Key Deliverables
+                      Tasks to Complete
                     </span>
                     <ul className="space-y-1.5 text-xs text-zinc-300">
                       {screen.responsibilities.map((resp, rIdx) => (
                         <li key={rIdx} className="flex items-start space-x-2">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400/80 mt-0.5 flex-shrink-0" />
-                          <span className="leading-snug text-zinc-300">{resp}</span>
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 mt-0.5 flex-shrink-0" />
+                          <span className="leading-snug">{resp}</span>
                         </li>
                       ))}
                     </ul>

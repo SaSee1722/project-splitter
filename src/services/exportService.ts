@@ -27,7 +27,7 @@ export function downloadMarkdownFile(filename: string, content: string) {
 export function generateMarkdownReport(input: ProjectInput, blueprint: ProjectBlueprint): string {
   const allScreensCount = blueprint.screens.length + (blueprint.aiSuggestedScreens?.length || 0);
 
-  return `# ${input.projectName} — AI Architecture Blueprint
+  return `# ${input.projectName} — Project Blueprint & Team Plan
 *Generated with TeamForge AI (Powered by Google Gemini)*
 
 ## 1. Project Overview
@@ -43,14 +43,18 @@ ${blueprint.targetUsers.map((u) => `- ${u}`).join('\n')}
 
 ---
 
-## 2. Team Workload Distribution
+## 2. Team Workload & Assigned Files
 ${blueprint.teamAssignments
   .map(
-    (t) => `### ${t.member} — ${t.role} (${t.workloadPercentage || Math.round(100 / blueprint.teamAssignments.length)}% Workload)
+    (t) => `### 👤 ${t.member} (${t.role}) — ${t.workloadPercentage || Math.round(100 / blueprint.teamAssignments.length)}% Workload
+
 **Assigned Screens:**
 ${t.assignedScreens.map((s) => `- ${s}`).join('\n')}
 
-**Key Responsibilities:**
+**Files to Work On (from Project Structure):**
+${(t.assignedFiles || []).map((f) => `- \`${f}\``).join('\n')}
+
+**What To Do:**
 ${t.responsibilities.map((r) => `- ${r}`).join('\n')}
 `
   )
@@ -58,13 +62,14 @@ ${t.responsibilities.map((r) => `- ${r}`).join('\n')}
 
 ---
 
-## 3. Screen Architecture
+## 3. Screen Architecture & File Locations
 ${blueprint.screens
   .map(
     (s, idx) => `### Screen ${idx + 1}: ${s.name} [Priority: ${s.priority}]
 - **Primary Owner:** ${s.assignedMember}
+- **File Location:** \`${s.assignedFile || 'src/screens/' + s.name + 'Screen.tsx'}\`
 - **Purpose:** ${s.purpose}
-- **Responsibilities:**
+- **Tasks to Complete:**
 ${s.responsibilities.map((r) => `  - ${r}`).join('\n')}
 `
   )
@@ -72,15 +77,16 @@ ${s.responsibilities.map((r) => `  - ${r}`).join('\n')}
 
 ${
   blueprint.aiSuggestedScreens && blueprint.aiSuggestedScreens.length > 0
-    ? `\n## 4. AI Suggested Screens (Identified Missing)
-> The following screens were identified as missing from the initial specification and are recommended for a production-ready application:
+    ? `\n## 4. AI Suggested Screens
+> The following screens were identified as missing and are recommended for a complete application:
 
 ${blueprint.aiSuggestedScreens
   .map(
     (s, idx) => `### Suggested Screen ${idx + 1}: ${s.name} [Priority: ${s.priority}]
 - **Assigned Developer:** ${s.assignedMember}
+- **File Location:** \`${s.assignedFile || 'src/screens/' + s.name + 'Screen.tsx'}\`
 - **Purpose:** ${s.purpose}
-- **Responsibilities:**
+- **Tasks:**
 ${s.responsibilities.map((r) => `  - ${r}`).join('\n')}
 `
   )
@@ -99,7 +105,7 @@ ${blueprint.userFlow
 ---
 
 ## 6. Shared Architectural Modules
-| Module Name | Category | Architectural Scope |
+| Module Name | Category | What it does |
 |---|---|---|
 ${blueprint.sharedModules
   .map((m) => `| **${m.name}** | \`${m.category}\` | ${m.description} |`)
@@ -107,9 +113,9 @@ ${blueprint.sharedModules
 
 ---
 
-## 7. Recommended Project Structure
+## 7. Recommended Project File Structure
 \`\`\`
-${blueprint.projectStructure.map((p) => `${p.path}   # ${p.description || ''}`).join('\n')}
+${blueprint.projectStructure.map((p) => `${p.path.padEnd(40)} # [${p.assignedMember || 'Shared'}] ${p.description || ''}`).join('\n')}
 \`\`\`
 
 ---
@@ -121,7 +127,7 @@ ${blueprint.githubPlan.branches
   .map((b) => `- \`${b.name}\` -> Owner: **${b.member}** (${b.purpose})`)
   .join('\n')}
 
-### Collaboration Guide
+### 7-Step Collaboration Guide
 ${blueprint.githubPlan.workflowSteps
   .map(
     (s) => `#### Step ${s.step}: ${s.phase} — ${s.title}
@@ -135,7 +141,7 @@ ${s.description}
 
 ---
 
-## 9. Implementation Notes
+## 9. Next Steps for the Team
 ${blueprint.implementationNotes.map((n) => `- ${n}`).join('\n')}
 `;
 }
@@ -143,11 +149,17 @@ ${blueprint.implementationNotes.map((n) => `- ${n}`).join('\n')}
 export function copyTeamAssignmentsToClipboard(blueprint: ProjectBlueprint): string {
   const text = blueprint.teamAssignments
     .map((t) => {
+      const filesList = (t.assignedFiles && t.assignedFiles.length > 0)
+        ? t.assignedFiles.map((f) => `    • ${f}`).join('\n')
+        : '    • (See project structure)';
+
       return `👤 ${t.member} (${t.role}) [${t.workloadPercentage || Math.round(100 / blueprint.teamAssignments.length)}% Workload]:
-Screens:
-${t.assignedScreens.map((s) => `  • ${s}`).join('\n')}
-Responsibilities:
-${t.responsibilities.map((r) => `  • ${r}`).join('\n')}`;
+  Screens:
+${t.assignedScreens.map((s) => `    • ${s}`).join('\n')}
+  Files To Work On:
+${filesList}
+  What To Do:
+${t.responsibilities.map((r) => `    • ${r}`).join('\n')}`;
     })
     .join('\n\n');
 
@@ -156,7 +168,7 @@ ${t.responsibilities.map((r) => `  • ${r}`).join('\n')}`;
 
 export function copyGithubPlanToClipboard(blueprint: ProjectBlueprint): string {
   const branches = blueprint.githubPlan.branches
-    .map((b) => `• Branch: ${b.name} | Assigned: ${b.member} (${b.purpose})`)
+    .map((b) => `• Branch: ${b.name} | Owner: ${b.member} (${b.purpose})`)
     .join('\n');
 
   const steps = blueprint.githubPlan.workflowSteps

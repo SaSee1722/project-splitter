@@ -31,10 +31,11 @@ export interface ProjectInput {
 
 export interface ScreenItem {
   name: string;
-  purpose: string;
+  purpose: string; // Written in simple, clear, normal English
   priority: 'Must Have' | 'Should Have' | 'Nice to Have' | string;
   assignedMember: string;
-  responsibilities: string[];
+  assignedFile?: string; // Exact file path from projectStructure
+  responsibilities: string[]; // Step-by-step tasks in plain English
   isAiSuggested?: boolean;
 }
 
@@ -42,13 +43,14 @@ export interface TeamAssignmentItem {
   member: string;
   role: string;
   assignedScreens: string[];
-  responsibilities: string[];
+  assignedFiles: string[]; // Exact file paths from the project structure this developer must build!
+  responsibilities: string[]; // Clear, plain English tasks
   workloadPercentage?: number;
 }
 
 export interface CoreFeatureItem {
   title: string;
-  description: string;
+  description: string; // Plain English
   complexity: 'Low' | 'Medium' | 'High';
 }
 
@@ -64,12 +66,14 @@ export interface SharedModuleItem {
   name: string;
   category: string;
   description: string;
+  sharedFiles?: string[];
 }
 
 export interface ProjectStructureNode {
   path: string;
   type: 'dir' | 'file';
-  description?: string;
+  assignedMember?: string; // Developer name or "Shared / All"
+  description?: string; // What this file does in simple English
 }
 
 export interface GitBranchItem {
