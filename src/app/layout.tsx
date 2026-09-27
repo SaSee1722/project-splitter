@@ -5,9 +5,15 @@ import Footer from '@/components/Footer';
 import { ToastProvider } from '@/components/Toast';
 
 export const metadata: Metadata = {
-  title: 'TeamForge AI — Turn Ideas Into Team-Ready Projects',
+  title: 'Project Splitter AI — Turn Hackathon Ideas Into Team-Ready Plans',
   description:
-    'Convert software problem statements into structured project plans, screen architectures, and balanced team workloads using Google Gemini API.',
+    'Convert problem statements into complete development blueprints with screen assignments, file ownership, AI coding prompts, and team work distribution powered by Google Gemini.',
+  keywords: 'hackathon, project planning, AI, team collaboration, development blueprint',
+  openGraph: {
+    title: 'Project Splitter AI',
+    description: 'Turn a hackathon problem statement into a complete, team-ready development plan.',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({
@@ -16,8 +22,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-[#07090E] text-zinc-100 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+    <html lang="en">
+      <body className="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans antialiased selection:bg-indigo-100 selection:text-indigo-900">
         <ToastProvider>
           <Navbar />
           <div className="flex-1 flex flex-col">{children}</div>

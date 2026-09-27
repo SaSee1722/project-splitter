@@ -278,6 +278,120 @@ export async function analyzeProjectWithGemini(
   }
 }
 
+export async function generateSolutionWithGemini(
+  projectName: string,
+  problemStatement: string,
+  customApiKey?: string
+): Promise<{ solution: string; source: 'gemini' | 'architect-engine' }> {
+  const apiKey = customApiKey || process.env.GEMINI_API_KEY;
+  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+
+  if (!apiKey || apiKey.trim() === '' || apiKey === 'your_gemini_api_key_here') {
+    return {
+      solution: generateFallbackSolution(projectName, problemStatement),
+      source: 'architect-engine',
+    };
+  }
+
+  const prompt = `You are an expert Hackathon Product Architect and Tech Lead.
+The team is building a project called "${projectName || 'App'}".
+Here is their problem statement:
+"${problemStatement}"
+
+Propose a compelling, high-impact, and clear solution for a hackathon team to build.
+Include:
+1. The Core Solution Concept: What is the app and how it directly solves the problem.
+2. 3-4 Key Practical Features that can be prototyped in a hackathon.
+3. How users get immediate value from it.
+
+Rules:
+- Write in plain, clear, conversational English without buzzwords or corporate jargon.
+- Keep it concise: 2-3 short, engaging paragraphs (approx. 100-160 words).
+- Provide only the direct solution text without any titles, prefixes, or markdown bullet points.`;
+
+  try {
+    const candidateModels = [model, 'gemini-flash-latest', 'gemini-2.5-flash-lite', 'gemini-1.5-flash'];
+    for (const curModel of Array.from(new Set(candidateModels))) {
+      try {
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${curModel}:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: prompt }],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 600,
+              },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          const errText = await response.text();
+          console.warn(`Solution model ${curModel} returned ${response.status}: ${errText.slice(0, 100)}`);
+          if (response.status === 400 && errText.includes('API_KEY_INVALID')) {
+            throw new Error('Invalid Gemini API Key. Please verify your API key in Settings.');
+          }
+          if (response.status === 429) {
+            throw new Error('Gemini API rate limit exceeded. Please try again in a few moments.');
+          }
+          continue;
+        }
+
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text && text.trim()) {
+          return {
+            solution: text.trim(),
+            source: 'gemini',
+          };
+        }
+      } catch (err: any) {
+        if (err.message.includes('API Key') || err.message.includes('rate limit')) {
+          throw err;
+        }
+      }
+    }
+
+    return {
+      solution: generateFallbackSolution(projectName, problemStatement),
+      source: 'architect-engine',
+    };
+  } catch (error) {
+    return {
+      solution: generateFallbackSolution(projectName, problemStatement),
+      source: 'architect-engine',
+    };
+  }
+}
+
+function generateFallbackSolution(projectName: string, problemStatement: string): string {
+  const pLower = problemStatement.toLowerCase();
+
+  if (pLower.includes('code') || pLower.includes('learn') || pLower.includes('evaluat') || pLower.includes('platform')) {
+    return `Build ${projectName || 'an interactive learning platform'} that pairs structured, skill-focused programming tracks with an automated AI code evaluator. Learners choose their target language, complete hands-on coding challenges directly in an integrated web editor, and receive real-time, line-by-line feedback, syntax hints, and personalized error corrections. An intuitive dashboard tracks coding streaks, skill milestones, and test suite pass rates to keep learners motivated and continuously improving.`;
+  }
+
+  if (pLower.includes('food') || pLower.includes('waste') || pLower.includes('meal') || pLower.includes('dining')) {
+    return `Create a real-time surplus redistribution app that connects cafeterias and dining halls with students and local shelters. Staff can post excess portions with a single tap, notifying nearby users via push alerts with a live pickup countdown timer and QR-code verification to eliminate food waste while addressing student hunger.`;
+  }
+
+  if (pLower.includes('health') || pLower.includes('patient') || pLower.includes('doctor') || pLower.includes('care')) {
+    return `Develop a streamlined digital health management portal that coordinates patient symptoms, prescription alerts, and provider follow-ups. The app provides quick symptom self-assessment, automated reminder notifications, and one-touch telemedicine triage to ensure accessible and timely care.`;
+  }
+
+  return `Create ${projectName || 'a centralized digital solution'} designed to tackle this challenge through an intuitive, end-to-end user workflow. The platform features an easy-to-use interface for monitoring activities in real time, automated alerts for important updates, and collaborative tools that enable teams to take immediate action with measurable outcomes.`;
+}
+
 function buildUserPrompt(input: ProjectInput): string {
   const membersFormatted = input.teamMembers
     .map((m, i) => `${i + 1}. ${m.name} (${m.role || 'Full Stack Developer'})`)

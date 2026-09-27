@@ -2,24 +2,23 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Users, 
-  Layers, 
-  GitBranch, 
-  Download, 
-  CheckCircle2, 
-  Terminal, 
-  FolderTree, 
-  ShieldCheck, 
-  Cpu, 
-  FileCode2, 
+import {
+  ArrowRight,
+  Sparkles,
+  Users,
+  Layers,
+  GitBranch,
+  Download,
+  Terminal,
+  FolderTree,
+  FileCode2,
   ChevronRight,
-  Code2,
-  Boxes,
   Zap,
-  Check
+  Check,
+  Brain,
+  Code2,
+  Shield,
+  Clock,
 } from 'lucide-react';
 import Logo from '@/components/Logo';
 
@@ -29,149 +28,215 @@ interface DemoPreview {
   tag: string;
   tech: string;
   problem: string;
-  screens: { name: string; owner: string; file: string; priority: string }[];
-  members: { name: string; role: string; share: number; color: string }[];
+  screens: { name: string; owner: string; file: string; priority: string; role: string }[];
+  members: { name: string; role: string; share: number; color: string; bgColor: string }[];
   branches: string[];
 }
 
 const DEMOS: DemoPreview[] = [
   {
+    id: 'habit',
+    name: 'Smart Habit Tracker',
+    tag: 'Student Productivity',
+    tech: 'React Native',
+    problem: 'Many students struggle to maintain consistent daily habits because they forget tasks, lack motivation, and cannot easily track their progress.',
+    screens: [
+      { name: 'Home Dashboard', owner: 'Arun', file: 'src/screens/HomeScreen.tsx', priority: 'Must Have', role: 'Frontend' },
+      { name: 'Add Habit', owner: 'Arun', file: 'src/screens/AddHabitScreen.tsx', priority: 'Must Have', role: 'Frontend' },
+      { name: 'Progress Analytics', owner: 'Kumar', file: 'src/screens/ProgressScreen.tsx', priority: 'Must Have', role: 'Backend' },
+      { name: 'AI Suggestions', owner: 'Rahul', file: 'src/services/aiSuggestions.ts', priority: 'Should Have', role: 'AI/ML' },
+    ],
+    members: [
+      { name: 'Arun', role: 'Frontend Dev', share: 35, color: 'text-indigo-700', bgColor: 'bg-indigo-50 border-indigo-200' },
+      { name: 'Kumar', role: 'Backend Dev', share: 30, color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' },
+      { name: 'Priya', role: 'UI/UX Designer', share: 20, color: 'text-violet-700', bgColor: 'bg-violet-50 border-violet-200' },
+      { name: 'Rahul', role: 'AI/ML Dev', share: 15, color: 'text-amber-700', bgColor: 'bg-amber-50 border-amber-200' },
+    ],
+    branches: ['feature/arun-frontend-screens', 'feature/kumar-backend-api', 'feature/priya-ui-design', 'feature/rahul-ai-engine'],
+  },
+  {
     id: 'logistics',
-    name: 'OmniTrack - Fleet Telematics',
+    name: 'Fleet Telematics',
     tag: 'Logistics & IoT',
     tech: 'React',
     problem: 'Truck dispatchers suffer from blind spots in vehicle maintenance, live GPS route tracking, and driver fatigue alerts.',
     screens: [
-      { name: 'Fleet Overview Map', owner: 'Salabadesh', file: 'src/screens/FleetOverviewMapScreen.tsx', priority: 'Must Have' },
-      { name: 'Vehicle Telemetry Detail', owner: 'Arun', file: 'src/screens/VehicleTelemetryDetailScreen.tsx', priority: 'Must Have' },
-      { name: 'Maintenance Schedule', owner: 'Karthik', file: 'src/screens/MaintenanceScheduleScreen.tsx', priority: 'Should Have' },
-      { name: 'Alerts & Incidents Hub', owner: 'Vijay', file: 'src/screens/AlertsIncidentsHubScreen.tsx', priority: 'Must Have' },
+      { name: 'Fleet Overview Map', owner: 'Salabadesh', file: 'src/screens/FleetMapScreen.tsx', priority: 'Must Have', role: 'Frontend' },
+      { name: 'Vehicle Telemetry', owner: 'Arun', file: 'src/screens/TelemetryScreen.tsx', priority: 'Must Have', role: 'Full Stack' },
+      { name: 'Alerts Hub', owner: 'Vijay', file: 'src/screens/AlertsScreen.tsx', priority: 'Must Have', role: 'Backend' },
     ],
     members: [
-      { name: 'Salabadesh', role: 'Frontend Lead', share: 25, color: 'from-amber-400 to-orange-500' },
-      { name: 'Arun', role: 'Full Stack', share: 25, color: 'from-indigo-400 to-violet-500' },
-      { name: 'Karthik', role: 'UI/UX Dev', share: 25, color: 'from-cyan-400 to-sky-500' },
-      { name: 'Vijay', role: 'Backend/API', share: 25, color: 'from-emerald-400 to-teal-500' },
+      { name: 'Salabadesh', role: 'Frontend Lead', share: 33, color: 'text-amber-700', bgColor: 'bg-amber-50 border-amber-200' },
+      { name: 'Arun', role: 'Full Stack', share: 33, color: 'text-indigo-700', bgColor: 'bg-indigo-50 border-indigo-200' },
+      { name: 'Vijay', role: 'Backend/API', share: 34, color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' },
     ],
-    branches: ['feature/salabadesh-fleet-map', 'feature/arun-telemetry-detail', 'feature/karthik-maintenance-calendar', 'feature/vijay-alerts-hub'],
+    branches: ['feature/salabadesh-fleet-map', 'feature/arun-telemetry', 'feature/vijay-alerts-hub'],
   },
   {
-    id: 'telehealth',
-    name: 'CarePulse - Remote Vitals',
+    id: 'healthcare',
+    name: 'Patient Telehealth',
     tag: 'Healthcare Mobile',
     tech: 'React Native',
-    problem: 'Homebound patients struggle to track blood pressure, remember prescriptions, and conduct video calls with their cardiologists.',
+    problem: 'Patients recovering at home struggle with tracking blood pressure, medication adherence, and scheduling doctor video appointments.',
     screens: [
-      { name: 'Patient Vitals Dashboard', owner: 'Sarah', file: 'src/screens/PatientVitalsScreen.tsx', priority: 'Must Have' },
-      { name: 'Prescription Calendar', owner: 'Alex', file: 'src/screens/PrescriptionCalendarScreen.tsx', priority: 'Must Have' },
-      { name: 'Doctor Video Call Room', owner: 'Devon', file: 'src/screens/VideoConsultationScreen.tsx', priority: 'Should Have' },
+      { name: 'Vitals Dashboard', owner: 'Sarah', file: 'src/screens/VitalsScreen.tsx', priority: 'Must Have', role: 'Frontend' },
+      { name: 'Prescriptions', owner: 'Alex', file: 'src/screens/PrescriptionsScreen.tsx', priority: 'Must Have', role: 'Full Stack' },
+      { name: 'Video Consultation', owner: 'Devon', file: 'src/screens/VideoCallScreen.tsx', priority: 'Should Have', role: 'Backend' },
     ],
     members: [
-      { name: 'Sarah', role: 'Product & Clinical', share: 34, color: 'from-rose-400 to-pink-500' },
-      { name: 'Alex', role: 'Mobile Engineer', share: 33, color: 'from-indigo-400 to-cyan-500' },
-      { name: 'Devon', role: 'Backend & Video', share: 33, color: 'from-emerald-400 to-teal-500' },
+      { name: 'Sarah', role: 'Clinical Lead', share: 40, color: 'text-rose-700', bgColor: 'bg-rose-50 border-rose-200' },
+      { name: 'Alex', role: 'Mobile Dev', share: 35, color: 'text-indigo-700', bgColor: 'bg-indigo-50 border-indigo-200' },
+      { name: 'Devon', role: 'Backend/Video', share: 25, color: 'text-emerald-700', bgColor: 'bg-emerald-50 border-emerald-200' },
     ],
-    branches: ['feature/sarah-vitals-dash', 'feature/alex-prescriptions', 'feature/devon-webrtc-call'],
+    branches: ['feature/sarah-vitals-dash', 'feature/alex-prescriptions', 'feature/devon-webrtc'],
+  },
+];
+
+const FEATURES = [
+  {
+    icon: Brain,
+    title: 'AI Solution Generation',
+    desc: 'Describe your problem and let Gemini generate a complete solution with objectives, features, and tech approach.',
+    color: 'text-violet-600',
+    bg: 'bg-violet-50',
+    border: 'border-violet-200',
   },
   {
-    id: 'ecommerce',
-    name: 'ArtisanBazaar - Maker Shop',
-    tag: 'E-Commerce Platform',
-    tech: 'Next.js',
-    problem: 'Independent craft makers need an omnichannel web store with automated inventory synchronization across pop-up retail stalls and Stripe web checkout.',
-    screens: [
-      { name: 'Storefront Catalog', owner: 'Maya', file: 'src/app/catalog/page.tsx', priority: 'Must Have' },
-      { name: 'Stripe Express Checkout', owner: 'Salabadesh', file: 'src/app/checkout/page.tsx', priority: 'Must Have' },
-      { name: 'Inventory Sync Admin', owner: 'Leo', file: 'src/app/admin/inventory/page.tsx', priority: 'Should Have' },
-    ],
-    members: [
-      { name: 'Maya', role: 'Design Lead', share: 33, color: 'from-fuchsia-400 to-purple-500' },
-      { name: 'Salabadesh', role: 'Full Stack', share: 34, color: 'from-amber-400 to-orange-500' },
-      { name: 'Leo', role: 'Backend Engineer', share: 33, color: 'from-emerald-400 to-cyan-500' },
-    ],
-    branches: ['feature/maya-catalog-ui', 'feature/salabadesh-stripe-checkout', 'feature/leo-inventory-api'],
+    icon: FileCode2,
+    title: 'File Ownership System',
+    desc: 'Every developer knows exactly which files they own, can read, and must not modify — eliminating merge conflicts.',
+    color: 'text-indigo-600',
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-200',
   },
+  {
+    icon: Users,
+    title: 'Smart Work Distribution',
+    desc: 'AI assigns work based on role, skill, and complexity — not blindly dividing screens equally.',
+    color: 'text-blue-600',
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+  },
+  {
+    icon: Terminal,
+    title: 'AI Coding IDE Prompts',
+    desc: 'Generate ready-to-paste prompts for Cursor, Claude Code, Antigravity, and other AI coding tools.',
+    color: 'text-emerald-600',
+    bg: 'bg-emerald-50',
+    border: 'border-emerald-200',
+  },
+  {
+    icon: Download,
+    title: 'Downloadable Project ZIP',
+    desc: 'Download the complete folder structure with placeholder files and documentation ready to start coding.',
+    color: 'text-amber-600',
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+  },
+  {
+    icon: GitBranch,
+    title: 'GitHub Collaboration Plan',
+    desc: 'Scoped branch naming, pull request strategy, and a 7-step conflict-free workflow for your team.',
+    color: 'text-rose-600',
+    bg: 'bg-rose-50',
+    border: 'border-rose-200',
+  },
+];
+
+const STEPS = [
+  { num: '01', title: 'Enter Project Details', desc: 'Project name, hackathon event, problem statement, and solution (or let AI generate it).', color: 'bg-indigo-600' },
+  { num: '02', title: 'Add Team Members', desc: 'Add developers with their roles, experience level, and skills.', color: 'bg-violet-600' },
+  { num: '03', title: 'AI Analysis Engine', desc: 'Gemini analyzes your project and generates complete architecture, screens, and modules.', color: 'bg-blue-600' },
+  { num: '04', title: 'Export & Start Coding', desc: 'Download blueprint, copy AI prompts, and each developer starts building immediately.', color: 'bg-emerald-600' },
 ];
 
 export default function LandingPage() {
   const [activeDemo, setActiveDemo] = useState<DemoPreview>(DEMOS[0]);
 
   return (
-    <div className="min-h-screen bg-[#07090E] text-zinc-100 selection:bg-amber-500/30 selection:text-amber-200 overflow-x-hidden">
-      {/* Ambient background glow points */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-indigo-600/15 via-amber-500/10 to-transparent blur-[140px] opacity-70" />
-        <div className="absolute top-[600px] -left-40 w-[500px] h-[500px] bg-cyan-600/10 blur-[130px] rounded-full opacity-50" />
-        <div className="absolute top-[800px] -right-40 w-[500px] h-[500px] bg-amber-600/10 blur-[130px] rounded-full opacity-40" />
-      </div>
-
+    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden">
       {/* Hero Section */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 z-10 border-b border-zinc-800/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Top Announcement Badge */}
-          <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800/90 text-xs font-medium text-zinc-300 mb-8 backdrop-blur-md shadow-lg shadow-black/40">
-            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-zinc-400">TeamForge AI Engine</span>
-            <span className="text-zinc-700">|</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-indigo-300 to-cyan-300 font-semibold">
-              Powered by Google Gemini 2.5 Flash
-            </span>
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-slate-200 overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/80 via-white to-violet-50/50 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-violet-100/40 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          {/* Badge */}
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white border border-indigo-200 text-sm font-medium text-indigo-700 mb-8 shadow-sm">
+            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse" />
+            <span>Powered by Google Gemini 2.5 Flash</span>
+            <span className="text-slate-300">•</span>
+            <span className="text-slate-600">Built for Hackathons</span>
           </div>
 
-          {/* Main Headline */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.08] mb-6">
-            Turn Ideas Into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 via-indigo-400 to-cyan-400">
-              Team-Ready Projects.
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.08] mb-6">
+            Turn Your Problem Into a{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600">
+              Team-Ready Plan.
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Describe your problem. Let AI structure your project, identify screens, and divide the work across your team with exact file assignments.
+          <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+            Project Splitter AI transforms your hackathon problem statement into a complete development blueprint — with screen assignments, file ownership, and AI prompts for each developer.
           </p>
 
-          {/* Primary CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-14">
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-16">
             <Link
               href="/create"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-base shadow-lg shadow-indigo-200 transition-all transform hover:-translate-y-0.5 active:translate-y-0"
             >
-              <Sparkles className="w-4 h-4 text-cyan-200" />
+              <Sparkles className="w-5 h-5" />
               <span>Create Project Plan</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
 
             <Link
               href="/projects"
-              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 border border-zinc-800/80 text-zinc-200 font-semibold text-sm transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-semibold text-base transition-all shadow-sm"
             >
-              <span>Explore Saved Blueprints</span>
-              <ChevronRight className="w-4 h-4 text-zinc-500" />
+              <span>View Saved Plans</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
             </Link>
           </div>
 
-          {/* Real-time Interactive Blueprint Demo Studio */}
-          <div className="max-w-5xl mx-auto text-left">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 px-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
-                  <Zap className="w-3.5 h-3.5 text-amber-400" />
-                  Live Architecture Preview
-                </span>
-                <span className="text-[11px] text-zinc-500 hidden sm:inline">— Click to switch project domains:</span>
+          {/* Trust badges */}
+          <div className="flex flex-wrap items-center justify-center gap-4 mb-16 text-sm text-slate-500">
+            {[
+              { icon: Zap, label: 'Ready in 30 seconds' },
+              { icon: Shield, label: 'No signup required' },
+              { icon: Clock, label: 'Save hackathon hours' },
+            ].map((item, i) => (
+              <div key={i} className="flex items-center space-x-1.5">
+                <item.icon className="w-4 h-4 text-indigo-500" />
+                <span>{item.label}</span>
               </div>
+            ))}
+          </div>
 
-              {/* Demo Switcher Pills */}
-              <div className="flex items-center space-x-1.5 bg-zinc-900/90 p-1 rounded-xl border border-zinc-800">
+          {/* Interactive Demo Preview */}
+          <div className="max-w-5xl mx-auto text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 px-1">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600 flex items-center gap-1.5">
+                  <Zap className="w-3.5 h-3.5" />
+                  Live Preview
+                </span>
+                <span className="text-xs text-slate-500 hidden sm:inline">— Click to switch demo:</span>
+              </div>
+              <div className="flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
                 {DEMOS.map((demo) => (
                   <button
                     key={demo.id}
                     onClick={() => setActiveDemo(demo)}
-                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                       activeDemo.id === demo.id
-                        ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-sm'
-                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
+                        ? 'bg-white text-indigo-700 border border-indigo-200 shadow-sm font-bold'
+                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
                     }`}
                   >
                     {demo.tag}
@@ -180,67 +245,68 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Terminal Window */}
-            <div className="bg-[#0B0F19] rounded-2xl border border-zinc-800/90 shadow-2xl shadow-black/80 overflow-hidden">
-              {/* Window Header */}
-              <div className="bg-[#0e1320] px-4 py-3 border-b border-zinc-800/80 flex items-center justify-between">
+            {/* Demo Card */}
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+              {/* Header */}
+              <div className="bg-slate-50 px-5 py-3.5 border-b border-slate-200 flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                  <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-                  <span className="text-xs font-mono text-zinc-400 ml-2 font-medium">
-                    {activeDemo.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.blueprint
+                  <div className="w-3 h-3 rounded-full bg-rose-400" />
+                  <div className="w-3 h-3 rounded-full bg-amber-400" />
+                  <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                  <span className="text-xs font-mono text-slate-500 ml-2">
+                    {activeDemo.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}.blueprint.json
                   </span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-indigo-500/15 text-indigo-300 border border-indigo-500/30">
+                  <span className="px-2 py-0.5 rounded text-xs font-mono bg-indigo-50 text-indigo-700 border border-indigo-200">
                     {activeDemo.tech}
                   </span>
-                  <span className="px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                    Balanced 100%
+                  <span className="px-2 py-0.5 rounded text-xs font-mono bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    AI Generated ✓
                   </span>
                 </div>
               </div>
 
-              {/* Window Body */}
-              <div className="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 bg-gradient-to-b from-transparent to-black/30">
-                {/* Left 7 cols: Problem & Screen Architecture */}
+              <div className="p-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
+                {/* Left: Problem + Screens */}
                 <div className="lg:col-span-7 space-y-4">
-                  {/* Problem statement callout */}
-                  <div className="bg-zinc-950/80 p-3.5 rounded-xl border border-zinc-800/80">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-500 block mb-1">
+                  {/* Problem Statement */}
+                  <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <span className="text-xs uppercase font-mono tracking-wider text-slate-500 block mb-1.5">
                       Problem Statement
                     </span>
-                    <p className="text-xs text-zinc-300 leading-relaxed font-mono">
+                    <p className="text-sm text-slate-700 leading-relaxed">
                       &quot;{activeDemo.problem}&quot;
                     </p>
                   </div>
 
-                  {/* Screens with assigned files */}
+                  {/* Screens */}
                   <div>
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-cyan-400 block mb-2">
-                      Screen Architecture & Exact Assigned Files
+                    <span className="text-xs uppercase font-mono tracking-wider text-indigo-600 block mb-2">
+                      Generated Screens & File Assignments
                     </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {activeDemo.screens.map((screen, idx) => (
                         <div
                           key={idx}
-                          className="bg-zinc-900/80 p-3 rounded-xl border border-zinc-800/90 hover:border-zinc-700 transition-all flex flex-col justify-between"
+                          className="bg-white p-3 rounded-xl border border-slate-200 hover:border-indigo-300 hover:shadow-sm transition-all"
                         >
-                          <div>
-                            <div className="flex items-center justify-between gap-1 mb-1">
-                              <span className="text-xs font-bold text-zinc-100">{screen.name}</span>
-                              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-400">
-                                {screen.priority}
-                              </span>
-                            </div>
-                            <div className="text-[11px] font-mono text-cyan-400/90 truncate mb-1">
-                              {screen.file}
-                            </div>
+                          <div className="flex items-center justify-between mb-1.5">
+                            <span className="text-sm font-semibold text-slate-800">{screen.name}</span>
+                            <span className={`text-xs px-1.5 py-0.5 rounded font-mono ${
+                              screen.priority === 'Must Have'
+                                ? 'bg-rose-50 text-rose-600 border border-rose-200'
+                                : 'bg-amber-50 text-amber-600 border border-amber-200'
+                            }`}>
+                              {screen.priority}
+                            </span>
                           </div>
-                          <div className="flex items-center justify-between pt-2 border-t border-zinc-900 text-[11px]">
-                            <span className="text-zinc-500">Owner:</span>
-                            <span className="font-semibold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                          <div className="text-xs font-mono text-indigo-600 truncate mb-2">
+                            {screen.file}
+                          </div>
+                          <div className="flex items-center justify-between pt-1.5 border-t border-slate-100">
+                            <span className="text-xs text-slate-400">Owner:</span>
+                            <span className="text-xs font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
                               {screen.owner}
                             </span>
                           </div>
@@ -250,26 +316,28 @@ export default function LandingPage() {
                   </div>
                 </div>
 
-                {/* Right 5 cols: Team Workload & GitHub Branches */}
-                <div className="lg:col-span-5 space-y-4 flex flex-col justify-between">
-                  {/* Team Members Workload */}
-                  <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/80">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-zinc-400 block mb-3">
-                      Team Workload Division
+                {/* Right: Team + Branches */}
+                <div className="lg:col-span-5 space-y-4">
+                  {/* Team workload */}
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span className="text-xs uppercase font-mono tracking-wider text-slate-500 block mb-3">
+                      Team Workload
                     </span>
-                    <div className="space-y-2.5">
-                      {activeDemo.members.map((member, mIdx) => (
-                        <div key={mIdx}>
-                          <div className="flex items-center justify-between text-xs mb-1">
-                            <span className="font-semibold text-zinc-200">{member.name}</span>
-                            <div className="flex items-center space-x-1.5 font-mono text-[11px]">
-                              <span className="text-zinc-400">{member.role}</span>
-                              <span className="font-bold text-indigo-400">{member.share}%</span>
+                    <div className="space-y-3">
+                      {activeDemo.members.map((member, idx) => (
+                        <div key={idx}>
+                          <div className="flex items-center justify-between text-sm mb-1">
+                            <div className="flex items-center space-x-2">
+                              <span className={`text-xs px-2 py-0.5 rounded border font-medium ${member.bgColor} ${member.color}`}>
+                                {member.name}
+                              </span>
+                              <span className="text-xs text-slate-500">{member.role}</span>
                             </div>
+                            <span className="font-bold text-indigo-600 text-xs font-mono">{member.share}%</span>
                           </div>
-                          <div className="w-full bg-zinc-900 h-1.5 rounded-full overflow-hidden border border-zinc-800">
+                          <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
                             <div
-                              className={`h-full rounded-full bg-gradient-to-r ${member.color}`}
+                              className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500"
                               style={{ width: `${member.share}%` }}
                             />
                           </div>
@@ -278,15 +346,15 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* GitHub Branch Plan */}
-                  <div className="bg-zinc-950/80 p-4 rounded-xl border border-zinc-800/80">
-                    <span className="text-[10px] uppercase font-mono tracking-wider text-emerald-400 block mb-2">
-                      GitHub Feature Branches
+                  {/* Git branches */}
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <span className="text-xs uppercase font-mono tracking-wider text-emerald-600 block mb-2">
+                      Git Feature Branches
                     </span>
-                    <div className="space-y-1.5 font-mono text-[11px]">
+                    <div className="space-y-1.5 font-mono text-xs">
                       {activeDemo.branches.map((b, bIdx) => (
-                        <div key={bIdx} className="flex items-center space-x-2 text-zinc-300 bg-zinc-900/60 px-2.5 py-1 rounded-lg border border-zinc-800/60 truncate">
-                          <GitBranch className="w-3 h-3 text-cyan-400 flex-shrink-0" />
+                        <div key={bIdx} className="flex items-center space-x-2 text-slate-600 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200">
+                          <GitBranch className="w-3 h-3 text-emerald-500 flex-shrink-0" />
                           <span className="truncate">{b}</span>
                         </div>
                       ))}
@@ -299,192 +367,125 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-20 border-b border-zinc-800/60 relative z-10 bg-[#090C14]">
+      {/* How It Works */}
+      <section className="py-20 border-b border-slate-200 bg-slate-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-amber-400">
-              The Engineering Pipeline
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600">
+              The Workflow
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">
-              From Raw Idea to Team Sprint in 4 Steps
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">
+              From Problem to Plan in 4 Steps
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-              No more guessing who works on what. Clear screen ownership, exact file mapping, and git branches on day one.
+            <p className="text-slate-500 mt-3">
+              No more guessing who works on what. Clear ownership from day one.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <span className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
-                01
-              </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Enter Problem Statement</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Describe your software concept in plain English and select your tech stack (React, Next.js, Flutter, etc.).
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <span className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
-                02
-              </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Add Team & Screens</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                List your developers and their roles. Optionally add screens or let Gemini deduce the full screen architecture.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <span className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
-                03
-              </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Gemini AI Analysis</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Gemini balances workload, catches missing screens, and maps exact file paths to every developer.
-              </p>
-            </div>
-
-            <div className="bg-zinc-900/70 border border-zinc-800/80 p-6 rounded-2xl hover:border-zinc-700 transition-all">
-              <span className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-mono font-bold flex items-center justify-center mb-4">
-                04
-              </span>
-              <h3 className="font-bold text-sm text-zinc-100 mb-1.5">Export & Code</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Download starter ZIP with empty screen placeholders, copy GitHub plans, and start coding immediately.
-              </p>
-            </div>
+            {STEPS.map((step, idx) => (
+              <div key={idx} className="relative bg-white border border-slate-200 p-6 rounded-2xl shadow-sm hover:shadow-md hover:border-indigo-300 transition-all card-hover">
+                {idx < STEPS.length - 1 && (
+                  <div className="hidden md:block absolute top-10 -right-3 w-6 h-0.5 bg-slate-300 z-10" />
+                )}
+                <div className={`w-10 h-10 rounded-xl ${step.color} text-white text-sm font-mono font-bold flex items-center justify-center mb-4 shadow-sm`}>
+                  {step.num}
+                </div>
+                <h3 className="font-bold text-sm text-slate-900 mb-2">{step.title}</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Key Features Grid */}
-      <section className="py-20 border-b border-zinc-800/60 relative z-10">
+      {/* Features Grid */}
+      <section className="py-20 border-b border-slate-200 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-mono font-semibold uppercase tracking-wider text-indigo-400">
-              Built for Modern Engineering
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-violet-600">
+              Everything You Need
             </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white mt-2">
-              Everything Your Team Needs to Launch
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">
+              Built for Hackathon Success
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 mt-2">
-              Actionable software architecture without the fluff.
+            <p className="text-slate-500 mt-3">
+              Every feature designed to minimize time-to-coding for your entire team.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Feature 1 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <FileCode2 className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {FEATURES.map((feature, idx) => (
+              <div key={idx} className={`bg-white border ${feature.border} p-6 rounded-2xl hover:shadow-md transition-all card-hover group`}>
+                <div className={`w-11 h-11 rounded-xl ${feature.bg} border ${feature.border} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform`}>
+                  <feature.icon className={`w-5 h-5 ${feature.color}`} />
+                </div>
+                <h3 className="font-bold text-base text-slate-900 mb-2">{feature.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{feature.desc}</p>
               </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Exact File Allocation</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Every team member sees the exact files they need to work on from the project structure with 1-click copy.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <Users className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Equitable Workload Balancer</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Strict 1-to-1 screen ownership ensuring 0 duplicate ownership while balancing screen complexity and developer roles.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Missing Screen Detector</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                When you bring your own screens, Gemini identifies omitted screens (Auth, Settings, Errors) and tags them in an AI Suggested section.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <Download className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Downloadable Starter ZIP</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Generates empty starter screen placeholders with developer metadata and TODO checklists. Zero generated code bloat.
-              </p>
-            </div>
-
-            {/* Feature 5 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <GitBranch className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">GitHub Collaboration Strategy</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Scoped branch naming conventions plus an interactive 7-step Git workflow (Pull, Branch, Develop, Commit, Push, PR, Merge).
-              </p>
-            </div>
-
-            {/* Feature 6 */}
-            <div className="bg-[#0B0F19] border border-zinc-800/80 p-6 rounded-2xl hover:border-indigo-500/40 transition-all group">
-              <div className="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <h3 className="font-bold text-base text-zinc-100 mb-2">Plain English & Strict Privacy</h3>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Clean, understandable human instructions. Your API keys are kept strictly server-side and never exposed to git.
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA Banner */}
-      <section className="py-20 relative z-10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="bg-gradient-to-br from-[#0e1424] via-[#090d16] to-[#05070c] border border-indigo-500/30 rounded-3xl p-10 sm:p-14 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
-            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
-              Ready to structure your next engineering sprint?
+      {/* Output Pipeline */}
+      <section className="py-20 border-b border-slate-200 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-600">
+              Complete Output
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 mt-2">
+              What You Get
             </h2>
-            <p className="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto mb-8">
-              Transform your software concept into a team-ready project blueprint with screen assignments, folder hierarchy, and git plans in seconds.
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { label: 'Project Blueprint Markdown', desc: '25-section complete documentation', icon: '📄' },
+              { label: 'Screen Architecture', desc: 'All screens with UI components & APIs', icon: '🖥️' },
+              { label: 'File Ownership Map', desc: 'Who owns, reads, and must not touch', icon: '📁' },
+              { label: 'AI Coding Prompts', desc: 'Ready to paste into Cursor/Claude Code', icon: '🤖' },
+              { label: 'Downloadable ZIP', desc: 'Complete folder structure + placeholders', icon: '📦' },
+              { label: 'JSON Export', desc: 'Structured data for external tools', icon: '⚙️' },
+            ].map((item, idx) => (
+              <div key={idx} className="bg-white p-4 rounded-xl border border-slate-200 flex items-start space-x-3 hover:border-indigo-300 hover:shadow-sm transition-all">
+                <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                <div>
+                  <p className="font-semibold text-sm text-slate-900">{item.label}</p>
+                  <p className="text-xs text-slate-500 mt-0.5">{item.desc}</p>
+                </div>
+                <Check className="w-4 h-4 text-emerald-500 ml-auto flex-shrink-0 mt-0.5" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-gradient-to-br from-indigo-600 to-violet-700 rounded-3xl p-10 sm:p-14 shadow-2xl shadow-indigo-200 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-violet-400/20 rounded-full blur-3xl pointer-events-none" />
+
+            <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4 relative z-10">
+              Ready to split your project?
+            </h2>
+            <p className="text-indigo-100 max-w-xl mx-auto mb-8 relative z-10">
+              Go from problem statement to team-ready development plan in under 60 seconds.
             </p>
             <Link
               href="/create"
-              className="inline-flex items-center space-x-2.5 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5"
+              className="inline-flex items-center space-x-2.5 px-8 py-4 rounded-xl bg-white text-indigo-700 font-bold text-base shadow-lg transition-all transform hover:-translate-y-0.5 hover:shadow-xl relative z-10"
             >
-              <Sparkles className="w-4 h-4 text-cyan-200" />
-              <span>Create Project</span>
+              <Sparkles className="w-5 h-5 text-indigo-600" />
+              <span>Start for Free</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-zinc-800/80 py-8 text-xs text-zinc-500 bg-[#06080E] relative z-10">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-3">
-            <Logo size="sm" />
-            <span>—</span>
-            <span>Turn Ideas Into Team-Ready Projects</span>
-          </div>
-          <div className="flex items-center space-x-4">
-            <Link href="/create" className="hover:text-zinc-300 transition-colors">
-              Create Project
-            </Link>
-            <Link href="/projects" className="hover:text-zinc-300 transition-colors">
-              Project History
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

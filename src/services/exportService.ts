@@ -166,6 +166,35 @@ ${t.responsibilities.map((r) => `    • ${r}`).join('\n')}`;
   return text;
 }
 
+// Convenience aliases used by OverviewHeader
+export function generateMarkdown(input: ProjectInput, blueprint: ProjectBlueprint): string {
+  return generateMarkdownReport(input, blueprint);
+}
+
+export function generateJsonExport(input: ProjectInput, blueprint: ProjectBlueprint): object {
+  return {
+    projectName: input.projectName,
+    hackathonName: input.hackathonName,
+    technology: input.technology,
+    solution: input.solution,
+    teamMembers: input.teamMembers,
+    blueprint: {
+      projectOverview: blueprint.projectOverview,
+      targetUsers: blueprint.targetUsers,
+      coreFeatures: blueprint.coreFeatures,
+      screens: blueprint.screens,
+      aiSuggestedScreens: blueprint.aiSuggestedScreens,
+      userFlow: blueprint.userFlow,
+      teamAssignments: blueprint.teamAssignments,
+      sharedModules: blueprint.sharedModules,
+      projectStructure: blueprint.projectStructure,
+      githubPlan: blueprint.githubPlan,
+      implementationNotes: blueprint.implementationNotes,
+    },
+    exportedAt: new Date().toISOString(),
+  };
+}
+
 export function copyGithubPlanToClipboard(blueprint: ProjectBlueprint): string {
   const branches = blueprint.githubPlan.branches
     .map((b) => `• Branch: ${b.name} | Owner: ${b.member} (${b.purpose})`)

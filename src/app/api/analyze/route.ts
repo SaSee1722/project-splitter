@@ -1,15 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ProjectInput } from '@/types/project';
-import { analyzeProjectWithGemini } from '@/services/geminiService';
+import { analyzeProjectWithGemini, generateSolutionWithGemini } from '@/services/geminiService';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { input, apiKey: clientApiKey } = body as { input: ProjectInput; apiKey?: string };
 
     // Header override if passed from frontend secure settings
     const headerKey = req.headers.get('x-gemini-api-key');
-    const effectiveApiKey = headerKey || clientApiKey || process.env.GEMINI_API_KEY;
+    const effectiveApiKey = headerKey || body?.apiKey || process.env.GEMINI_API_KEY;
+
+    // ─── Mode: Quick Solution Generation ────────────────────────
+    if (body?.mode === 'generate-solution') {
+      const problemStatement = body.problemStatement;
+      const projectName = body.projectName || 'Project';
+
+      if (!problemStatement || typeof problemStatement !== 'string' || problemStatement.trim().length < 10) {
+        return NextResponse.json(
+          { error: 'Please enter a problem statement first (at least 10 characters).' },
+          { status: 400 }
+        );
+      }
+
+      const result = await generateSolutionWithGemini(projectName, problemStatement.trim(), effectiveApiKey);
+      return NextResponse.json({
+        success: true,
+        solution: result.solution,
+        source: result.source,
+      });
+    }
+
+    const { input, apiKey: clientApiKey } = body as { input: ProjectInput; apiKey?: string };
+    const analysisApiKey = effectiveApiKey || clientApiKey;
 
     // 1. Validation: Project Name
     if (!input || !input.projectName || input.projectName.trim() === '') {

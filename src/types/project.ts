@@ -13,6 +13,8 @@ export interface TeamMemberInput {
   id: string;
   name: string;
   role: string;
+  experience?: string;
+  skills?: string;
 }
 
 export interface PlannedScreenInput {
@@ -27,15 +29,19 @@ export interface ProjectInput {
   teamMembers: TeamMemberInput[];
   hasPlannedScreens: boolean;
   plannedScreens: PlannedScreenInput[];
+  hackathonName?: string;
+  solution?: string;
 }
 
 export interface ScreenItem {
   name: string;
-  purpose: string; // Written in simple, clear, normal English
+  purpose: string;
   priority: 'Must Have' | 'Should Have' | 'Nice to Have' | string;
   assignedMember: string;
-  assignedFile?: string; // Exact file path from projectStructure
-  responsibilities: string[]; // Step-by-step tasks in plain English
+  assignedFile?: string;
+  responsibilities: string[];
+  uiComponents?: string[];
+  apiRequirements?: string[];
   isAiSuggested?: boolean;
 }
 
@@ -43,14 +49,19 @@ export interface TeamAssignmentItem {
   member: string;
   role: string;
   assignedScreens: string[];
-  assignedFiles: string[]; // Exact file paths from the project structure this developer must build!
-  responsibilities: string[]; // Clear, plain English tasks
+  assignedFiles: string[];
+  readOnlyFiles?: string[];
+  doNotModifyFiles?: string[];
+  responsibilities: string[];
   workloadPercentage?: number;
+  aiCodingPrompt?: string;
+  dependencies?: string[];
+  expectedOutputs?: string[];
 }
 
 export interface CoreFeatureItem {
   title: string;
-  description: string; // Plain English
+  description: string;
   complexity: 'Low' | 'Medium' | 'High';
 }
 
@@ -72,8 +83,8 @@ export interface SharedModuleItem {
 export interface ProjectStructureNode {
   path: string;
   type: 'dir' | 'file';
-  assignedMember?: string; // Developer name or "Shared / All"
-  description?: string; // What this file does in simple English
+  assignedMember?: string;
+  description?: string;
 }
 
 export interface GitBranchItem {
@@ -108,6 +119,20 @@ export interface ProjectBlueprint {
   projectStructure: ProjectStructureNode[];
   githubPlan: GitHubPlan;
   implementationNotes: string[];
+  // Extended fields
+  technologyStack?: {
+    frontend?: string[];
+    backend?: string[];
+    database?: string[];
+    ai?: string[];
+    devops?: string[];
+  };
+  architectureOverview?: string;
+  apiRequirements?: { endpoint: string; method: string; purpose: string; assignedTo?: string }[];
+  databaseRequirements?: { table: string; description: string; fields: string[] }[];
+  securityConsiderations?: string[];
+  testingRequirements?: string[];
+  deploymentNotes?: string[];
 }
 
 export interface SavedProject {
